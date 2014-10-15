@@ -1,0 +1,203 @@
+{% extends "site/base.html" %}
+{% load staticfiles %}
+{% load qhonuskan_votes static %}
+
+{% block statichead %}
+	<link rel="stylesheet" type="text/css" href="{% static 'modeldb/index.css' %}" />
+	<link href="{% static 'voting_buttons.css' %}" rel="stylesheet" type="text/css" />
+	{# customize voting buttons #}
+	<style type="text/css">
+  		div.object {
+    	width: 40px;
+    	margin-right: 5px;
+    	float: left;
+    	border: 1px solid #666;
+  		}
+	</style>	
+	{% voting_script %}
+{% endblock %}
+
+{% block content %}
+    <div class="container-fluid">
+      <div class="row">
+{% comment %}      	
+        <div class="col-sm-3 col-md-2 sidebar">
+          <ul class="nav nav-sidebar">
+            <li class="active"><a href="#">Overview</a></li>
+            <li><a href="#">Reports</a></li>
+            <li><a href="#">Export</a></li>
+          </ul>
+          <ul class="nav nav-sidebar">
+            <li><a href="">Nav item 1</a></li>
+            <li><a href="">Nav item 2</a></li>
+            <li><a href="">Nav item 3</a></li>
+          </ul>
+        </div>
+{% endcomment %}        
+        <!-- <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main"> -->
+        <div class="col-md-12 col-md-offset-0 main">    	
+          <h2 class="sub-header">Models <a href="/models/evolution/">[evolution]</a></h2>
+          <div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th></th> <!--<th width=20></th>-->
+                  <th>name</th>
+                  <th>description</th>
+                  <th>structure</th>
+                </tr>
+              </thead>
+              <tbody>
+              	{% for model in models %}
+                	<tr>
+                  		<td> <!-- {{forloop.counter}} -->
+                  			<div class="object">{% vote_buttons_for model %}</div>
+                  		</td> 
+                  		<td>
+                  			<div class="text"><a href="/models/{{model.id}}">{{model.name}}</a></div>
+                  		</td>
+                  		<td>
+                  			<div class="edit modelnotes" id="{{model.id}}" name="notes"><font size="2">{{model.notes}}</font> <font size="1" color="black"><font color="red">({{model.level}}</font> model added by <font color="red" size=1.5><b>{{model.user.username}}</b></font> on <font color="red">{{model.date_added}}</font>)</font></div>
+                  		</td>
+                  		{% if model.d3file and model.d3file != "NULL" %}
+                  			<td class="graph" id="graph{{forloop.counter0}}" name="{{ MEDIA_URL }}{{ model.d3file }}"></td>
+                  		{% else %}
+                  			<td class="graph" name=""></td>
+                  		{% endif %}
+                	</tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+{% endblock %}
+
+{% block staticbody %}
+    <!-- Bootstrap core JavaScript -->
+    <script src="{% static 'bootstrap.min.js' %}"></script>
+    <script src="{% static 'd3.min.js' %}"></script>
+    <!-- <script src="http://d3js.org/d3.v3.min.js"></script> -->
+    <!-- Customize d3 graph of model composition -->
+	<style>
+	.link {
+  		fill: none;
+  		stroke: #666;
+  		stroke-width: 1px;
+	}
+	#connection {
+  		fill: green;
+	}
+	.link.connection {
+  		stroke: green;
+	}
+	.link.intrinsic {
+  		stroke-dasharray: 0,2 1;
+	}
+	circle {
+  		fill: #ccc;
+  		stroke: #333;
+  		stroke-width: 1px;
+	}
+	text {
+  		font: 8px sans-serif;
+  		pointer-events: none;
+  		text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, 0 -1px 0 #fff, -1px 0 0 #fff;
+	}
+	</style>    
+	<!-- Create d3 graph of model composition -->
+	<script type="text/javascript">
+		$(document).ready(function(){
+			// d3 GRAPH
+			$('td.graph').each(function(i) {
+				thiselem = $(this);
+				var d3file = thiselem.attr('name');
+				if(d3file){			
+				var jqhr = $.getJSON(d3file, function( links ) {
+				console.log("success. json (" + d3file + "): " + links);
+				
+				var nodes = {};
+				// Compute the distinct nodes from the links.
+				links.forEach(function(link) {
+  					link.source = nodes[link.source] || (nodes[link.source] = {name: link.source});
+  					link.target = nodes[link.target] || (nodes[link.target] = {name: link.target});
+				});
+
+				var width = 175,
+    				height = 75;
+				
+				var force = d3.layout.force()
+    				.nodes(d3.values(nodes))
+    				.links(links)
+    				.size([width, height])
+    				.linkDistance(15)
+    				.charge(-100)
+    				.on("tick", tick)
+    				.start();
+
+				var svg = d3.select("td.graph#graph"+i).append("svg")
+    				.attr("width", width)
+    				.attr("height", height);
+				
+				// Per-type markers, as they don't inherit styles.
+				svg.append("defs").selectAll("marker")
+    				.data(["suit", "connection", "intrinsic"])
+  				.enter().append("marker")
+    				.attr("id", function(d) { return d; })
+    				.attr("viewBox", "0 -5 10 10")
+    				.attr("refX", 15)
+    				.attr("refY", -1.5)
+    				.attr("markerWidth", 6)
+    				.attr("markerHeight", 6)
+    				.attr("orient", "auto")
+  				.append("path")
+    				.attr("d", "M0,-5L10,0L0,5");
+
+				var path = svg.append("g").selectAll("path")
+    				.data(force.links())
+  				.enter().append("path")
+    				.attr("class", function(d) { return "link " + d.type; })
+    				.attr("marker-end", function(d) { return "url(#" + d.type + ")"; });
+
+				var circle = svg.append("g").selectAll("circle")
+    				.data(force.nodes())
+  				.enter().append("circle")
+    				.attr("r", 3)
+    				.call(force.drag);
+
+				var text = svg.append("g").selectAll("text")
+    				.data(force.nodes())
+  				.enter().append("text")
+    				.attr("x", 8)
+    				.attr("y", ".31em")
+    				.text(function(d) { return d.name; });
+				    
+				// Use elliptical arc path segments to doubly-encode directionality.
+				function tick() {
+  				path.attr("d", linkArc);
+  				circle.attr("transform", transform);
+  				text.attr("transform", transform);
+				}
+				
+				function linkArc(d) {
+  				var dx = d.target.x - d.source.x,
+      				dy = d.target.y - d.source.y,
+      				dr = Math.sqrt(dx * dx + dy * dy);
+  				return "M" + d.source.x + "," + d.source.y + "A" + dr + "," + dr + " 0 0,1 " + d.target.x + "," + d.target.y;
+				}
+				
+				function transform(d) {
+  				return "translate(" + d.x + "," + d.y + ")";
+				}			
+			
+			}) // end of getJSON()
+				.fail(function() {
+    				console.log( "error loading d3 graph" );
+  				});				
+			} // end if (td.graph elem id not empty)
+			}); // end of loop over td.graph elements
+		}); // end $(document).ready()
+	</script>
+{% endblock %}
+

@@ -1,0 +1,71 @@
+{% extends "site/base.html" %}
+{% load staticfiles %}
+
+{# use to draw tag cloud on home page: #}
+{# {% load taggit_extras %} #}
+{# {% get_taglist as tags for 'modeldb.model' %} #}
+{# also draw community-wide model evolution graph on home page #}
+
+{% block statichead %}
+	<link rel="stylesheet" type="text/css" href="{% static 'jumbotron.css' %}" />
+{% endblock %}
+		
+{% block content %}
+    {% block "jumbotron" %}
+    <!-- Main jumbotron for a primary marketing message or call to action -->
+    <div class="jumbotron">
+      <div class="container">
+        <h1>The Infinite Brain</h1>
+        <p>Uniting modelers and experimentalists across neuroscience.</p>
+        {% if user.is_anonymous %}
+        	<p><a class="btn btn-primary btn-lg" role="button" href="/accounts/register/">Sign up &raquo;</a></p>
+        {% endif %}
+      </div>
+    </div>        
+    {% endblock %}
+
+    <div class="container">
+      <!-- Example row of columns -->
+      <div class="row">
+        <div class="col-md-4">
+          <h2><a href='/setup'>DNSim Setup</a></h2>
+          <p>A modular modeling tool.</p>
+          <!-- <p><a class="btn btn-default" href="https://github.com/jsherfey/dnsim" role="button">View on GitHub &raquo;</a></p> -->
+          <!-- <p><a class="btn btn-default" href="{% static 'modeldb/Modulator.zip' %}" role="button">Setup &raquo;</a></p> -->
+          <!-- <p><a class="btn btn-default" href="https://github.com/cogrhythms/dsim" role="button">View details &raquo;</a></p> -->
+        </div>
+        <div class="col-md-4">
+          <h2><a href="/models/">Enter the DB</a></h2>
+          <p>Database of existing models.</p>
+          <!-- <p><a class="btn btn-default" href="https://github.com/cogrhythms/dsim/tree/master/database" role="button">View on GitHub &raquo;</a></p> -->
+          <!-- <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p> -->
+          <!-- <p><a class="btn btn-default" href="{% url 'dashboard' %}" role="button">View details &raquo;</a></p> -->
+       </div>
+        <div class="col-md-4">
+          <h2><a href="https://twitter.com/jasonsherfey">News</a></h2>
+           {% load twitter_feed_tags %}
+           {% latest_tweets 10 %}
+{% comment %}           
+           <div class="tweets">
+           	{% for tweet in tweets %}
+           		<div class="tweet">
+           			 <p>{{ tweet.content|linkify_twitter_status|urlize|url_target_blank }}</p>
+           			 <p class="date">{{ tweet.published_at|date:"F d, Y" }}</p>
+           		</div>
+           	{% endfor %}
+           </div>
+{% endcomment %}     
+{% comment %}      
+          <p><a class="btn btn-default" href="https://twitter.com/jasonsherfey" role="button">View on Twitter &raquo;</a></p>
+{% endcomment %}
+        </div>
+      </div>
+
+      <hr>
+    </div> <!-- /container -->
+{% endblock %}
+
+{% block staticbody %}
+    <!-- Bootstrap core JavaScript -->
+    <script src="{% static 'bootstrap.min.js' %}"></script>
+{% endblock %}

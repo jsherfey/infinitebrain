@@ -1,0 +1,214 @@
+{% extends "site/base.html" %}
+{% load staticfiles %}
+{% load comments %}
+
+{% block statichead %}
+	<link rel="stylesheet" type="text/css" href="{% static 'modeldb/detail.css' %}" />
+	<style> #id_honeypot { display: none; }	</style>
+{% endblock %}
+
+{% block headertitle %}
+	<a class="navbar-brand" href="/models/">[<font color="green">models</font>]</a>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+	<div class="row" style="width:98%;margin-left:2%;">
+		<h1>{{ model.name }}</h1>
+		<div>({{model.level}} model added by {{model.user.username}} at {{model.date_added}})</div>
+		<br>
+		<ul>
+		<li><a href="{{ MEDIA_URL }}{{ model.readmefile }}">{{model.level}} equations</a></li>			
+		{% if model.notes|length >= 1 %}
+			<li><b>Description</b>: {{ model.notes }}</li>
+		{% endif %}
+		{% if model.tags.all|length >= 1 %}
+		<li><b>Tags</b>: <!-- ({{model.tags.all|length}}): --> 
+		{% for tag in model.tags.all %}
+			{{ tag.name }} 
+		{% endfor %}		
+		</li>		
+		{% endif %}
+		{% for spec in model.modelspec_set.all %}
+			{% if spec.type == "dsim-MATLAB" %}
+				<li><a class="btn btn-default" href="{{ MEDIA_URL }}{{ spec.file }}" role="button" style="color:blue">Download DNSim Model</a></li>
+			{% else %}
+				<!-- <li><a href="{{ MEDIA_URL }}{{ spec.file }}">{{spec.type}} specification</a></li> -->
+			{% endif %}
+		{% endfor %}
+		{# <li><a href="{{ MEDIA_URL }}{{ model.d3file }}">d3 file</a></li> #}
+		</ul>
+		<div id="graph"></div>
+		<div id="readme"></div>
+	</div>
+	<div class="row" style="width:98%;margin-left:2%;">
+		<br>
+		<h3>Discuss</h3>
+{% render_comment_list for model %}
+
+{% if user.is_authenticated %}
+	{% get_comment_form for model as form %}
+	<form action="{% comment_form_target %}" method="POST">
+    {% csrf_token %}
+    {{ form.comment }}
+    {{ form.honeypot }}
+    {{ form.content_type }}
+    {{ form.object_pk }}
+    {{ form.timestamp }}
+    {{ form.security_hash }}
+    <input type="submit" value="Add comment" id="id_submit" />
+    </form>	
+{% else %}
+	{% get_comment_form for model as form %}
+	<table>
+  		<form action="{% comment_form_target %}" method="post">
+    	{% csrf_token %}
+    	{{ form }}
+    	<tr>
+      		<td colspan="2">
+        		<input type="submit" name="submit" value="Post">
+        		<input type="submit" name="preview" value="Preview">
+      		</td>
+    	</tr>
+  		</form>
+	</table>
+{% endif %}
+	</div>
+</div>
+
+{% endblock %}
+
+{% block staticbody %}
+	<script src="{% static 'd3.min.js' %}"></script>
+	<style>
+	.link {
+  		fill: none;
+  		stroke: #666;
+  		stroke-width: 1.5px; /* 1.5px; */
+	}
+	#connection {
+  		fill: green;
+	}
+	.link.connection {
+  		stroke: green;
+	}
+	.link.intrinsic {
+  		stroke-dasharray: 0,2 1;
+	}
+	circle {
+  		fill: #ccc;
+  		stroke: #333;
+  		stroke-width: 1.5px;
+	}
+	text {
+  		font: 10px sans-serif;
+  		pointer-events: none;
+  		text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, 0 -1px 0 #fff, -1px 0 0 #fff;
+	}
+	</style>
+	
+	<script type="text/javascript">
+		$(document).ready(function(){
+
+			// d3 GRAPH
+			//console.log( "loading json from: {{ MEDIA_URL }}{{ model.d3file }}");
+			var jqhr = $.getJSON( "{{ MEDIA_URL }}{{ model.d3file }}", function( links ) {
+				//console.log("success. json: " + links);
+				
+				var nodes = {};
+				// Compute the distinct nodes from the links.
+				links.forEach(function(link) {
+  					link.source = nodes[link.source] || (nodes[link.source] = {name: link.source});
+  					link.target = nodes[link.target] || (nodes[link.target] = {name: link.target});
+				});
+
+				/*
+				var links = [
+					{
+						"source": "Na",
+						"target": "E",
+						"type": "intrinsic"
+					},
+					{
+						"source": "K",
+						"target": "E",
+						"type": "intrinsic"
+					}
+				];  		
+				*/
+
+				var width = 400, //960,
+    				height = 250; //500;
+				
+				var force = d3.layout.force()
+    				.nodes(d3.values(nodes))
+    				.links(links)
+    				.size([width, height])
+    				.linkDistance(60)
+    				.charge(-300)
+    				.on("tick", tick)
+    				.start();
+
+				var svg = d3.select("div#graph").append("svg")
+    				.attr("width", width)
+    				.attr("height", height);
+				
+				// Per-type markers, as they don't inherit styles.
+				svg.append("defs").selectAll("marker")
+    				.data(["suit", "connection", "intrinsic"])
+  				.enter().append("marker")
+    				.attr("id", function(d) { return d; })
+    				.attr("viewBox", "0 -5 10 10")
+    				.attr("refX", 15)
+    				.attr("refY", -1.5)
+    				.attr("markerWidth", 6)
+    				.attr("markerHeight", 6)
+    				.attr("orient", "auto")
+  				.append("path")
+    				.attr("d", "M0,-5L10,0L0,5");
+
+				var path = svg.append("g").selectAll("path")
+    				.data(force.links())
+  				.enter().append("path")
+    				.attr("class", function(d) { return "link " + d.type; })
+    				.attr("marker-end", function(d) { return "url(#" + d.type + ")"; });
+
+				var circle = svg.append("g").selectAll("circle")
+    				.data(force.nodes())
+  				.enter().append("circle")
+    				.attr("r", 6)
+    				.call(force.drag);
+
+				var text = svg.append("g").selectAll("text")
+    				.data(force.nodes())
+  				.enter().append("text")
+    				.attr("x", 8)
+    				.attr("y", ".31em")
+    				.text(function(d) { return d.name; });
+				    
+				// Use elliptical arc path segments to doubly-encode directionality.
+				function tick() {
+  				path.attr("d", linkArc);
+  				circle.attr("transform", transform);
+  				text.attr("transform", transform);
+				}
+				
+				function linkArc(d) {
+  				var dx = d.target.x - d.source.x,
+      				dy = d.target.y - d.source.y,
+      				dr = Math.sqrt(dx * dx + dy * dy);
+  				return "M" + d.source.x + "," + d.source.y + "A" + dr + "," + dr + " 0 0,1 " + d.target.x + "," + d.target.y;
+				}
+				
+				function transform(d) {
+  				return "translate(" + d.x + "," + d.y + ")";
+				}			
+			
+			}) // end of getJSON()
+				.fail(function() {
+    				console.log( "error loading d3 graph" );
+  				});
+			
+		}); // end $(document).ready()
+	</script>
+{% endblock %}

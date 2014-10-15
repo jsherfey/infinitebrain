@@ -1,0 +1,1 @@
+Activate your infinitebrain.org account - you have {{ expiration_days }} days!

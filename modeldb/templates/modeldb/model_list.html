@@ -1,0 +1,52 @@
+{% extends "site/base.html" %}
+{% load staticfiles %}
+{% load voting_tags %}
+{% votes_by_user user on model_list as vote_dict %}
+{% scores_for_objects model_list as score_dict %}
+
+{% block statichead %}
+	<script src="{% static 'modeldb/VoteHijacker.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<table>
+<col width="1"></col>
+<col></col>
+<thead>
+  <tr>
+    <th>Vote</th>
+    <th>Model</th>
+  </tr>
+</thead>
+<tbody>
+  {% for model in model_list %}
+  <tr class="{% cycle odd,even %}">
+    <td class="vote">
+    	{% dict_entry_for_item model from vote_dict as vote %}
+    	{% dict_entry_for_item model from score_dict as score %}
+      	<form class="modelvote" id="modelup{{ model.id }}" action="{{ model.id }}/{% if vote and vote.is_upvote %}clear{% else %}up{% endif %}vote/" method="POST">
+        	<input type="image" id="modeluparrow{{ model.id }}" src="{{ media_url }}img/aup{% if vote and vote.is_upvote %}mod{% else %}grey{% endif %}.png">
+      	</form>
+      	<form class="modelvote" id="modeldown{{ model.id }}" action="{{ model.id }}/{% if vote and vote.is_downvote %}clear{% else %}down{% endif %}vote/" method="POST">
+        	<input type="image" id="modeldownarrow{{ model.id }}" src="{{ media_url }}img/adown{% if vote and vote.is_downvote %}mod{% else %}grey{% endif %}.png">
+      	</form>
+    </td>
+    <td class="item">
+      <p>{{ model.name|escape }}</p>
+      <p class="details">
+        <span class="score" id="modelscore{{ model.id }}"
+              title="after {{ score.num_votes|default:0 }} vote{{ score.num_votes|default:0|pluralize }}">
+         {{ score.score|default:0 }} point{{ score.score|default:0|pluralize }}
+        </span>
+{% comment %}        
+        posted {{ model.created|timesince }} ago by
+        <span class="user"><a href="../users/{{ model.user.id }}/">{{ model.user.get_full_name|escape }}</a></span>
+        <span class="details"><a href="{{ model.get_absolute_url }}">details</a></span>
+{% endcomment %}
+      </p>
+    </td>
+  </tr>
+  {% endfor %}
+</tbody>
+</table>
+{% endblock %}

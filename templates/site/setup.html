@@ -1,0 +1,56 @@
+{% extends "site/base.html" %}
+{% load staticfiles %}
+
+{% block statichead %}
+	<link rel="stylesheet" type="text/css" href="{% static 'modeldb/dashboard.css' %}" />
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+	<div class="row" style="width:98%;margin-left:2%;">
+		{% if not user.is_authenticated %}
+			<p><a href="/accounts/register/">Register account with InfiniteBrain.org</a></p>
+		{% endif %}
+		<h1>DNSim Setup</h1>
+		<h2>Matlab toolbox (Linux)</h2>
+		<p>Download:
+			<ul>
+				<li>Method 1: <p>git clone https://github.com/jsherfey/dnsim.git</p></li>
+				<li>Method 2: <p><a class="btn btn-default" href="https://github.com/jsherfey/dnsim" role="button">Download on GitHub &raquo;</a></p></li>
+				<!-- <li>Method 2: <a class="btn btn-default" href="{% static 'modeldb/releases/dnsim-toolbox_v00.zip' %}" role="button">Download DNSim toolbox &raquo;</a></li> -->
+			</ul>
+			Run Matlab from dnsim directory and enter "dnsim" in Matlab Command Window.<br>
+			<br>
+			Tip: Login with your InfiniteBrain account to upload/download your models.<br>
+			For cluster computing: add dnsim/csh to your environment path.<br>
+			  e.g., add to .bashrc (dnsim in home directory): "export PATH=$PATH:~/dnsim/csh"<br>
+			<br>
+			Troubleshooting:<br>
+			- if database access is slow, increase Java Heap Memory in Matlab Preferences.<br>
+			- if model upload/download fails with "FTP Error: 425", enter "rehash toolboxcache" in Matlab Command Window.<br>
+		</p>
+		<h2>Standalone application (Linux)</h2>
+		<p><a class="btn btn-default" href="{% static 'modeldb/releases/dnsim-application_v01.zip' %}" role="button">Download DNSim application &raquo;</a></p>
+		<p>Unzip DNSim (dnsim-application_vXX.zip)</p>
+		<p>Install MATLAB Compiler Runtime (MCR)
+			<ul>
+				<li><a href="http://www.mathworks.com/products/compiler/mcr/index.html">Download MCR Installer (for Matlab 2013a)</a></li>
+				<li>Unzip and run MCR Installer (Unix: ./install, PC: setup.exe)</li>
+				<li>At end of installation, copy LD_LIBRARY_PATH and XAPPLRESDIR paths into DNSim file "run_dnsim.sh"</li>
+			</ul>
+		</p>
+		<p>Run DNSim: ./run_dnsim.sh</p>
+		<p>Note: the standalone app has all features of the Matlab GUI except the ability to upload models.</p>
+		<hr>
+		<h3><a href="{% static 'modeldb/DNSim-documentation_draft.pdf' %}">Documentation</a></h3>
+		<!-- <ul> -->
+			<!-- <li><a href="{% static 'modeldb/DNSim-documentation_draft.pdf' %}">User documentation</a></li> -->
+			<!-- <li><a href='#'>DNSim on GitHub</a></li> -->
+			<!-- <li>more references...</li> --></-->
+		<!-- </ul> -->
+	</div>
+</div>
+
+{% endblock %}
+
+
