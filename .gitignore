@@ -2,3 +2,5 @@
 *.pyc
 *.pyo
 media
+.project
+.metadata
