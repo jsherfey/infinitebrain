@@ -10,7 +10,7 @@ from qhonuskan_votes.models import VotesField, ObjectsWithScoresManager, SortByS
 
 # Create your models here.
 class Model(models.Model):
-    user = models.ForeignKey(User, blank=True, null=True)
+    user = models.ForeignKey(User, blank=True, null=True, related_name='user_model')
     name=models.CharField(max_length=1000)
     level=models.CharField(max_length=10, default='network') # options: {mechanism, node, network}
     notes=models.CharField(max_length=10000, default='')

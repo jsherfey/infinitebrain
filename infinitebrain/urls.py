@@ -25,4 +25,3 @@ urlpatterns = patterns('',
     url(r'^notifications/', get_nyt_pattern()),
     url(r'^wiki/', get_wiki_pattern()),
 )
-

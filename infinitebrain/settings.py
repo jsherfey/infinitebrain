@@ -11,16 +11,31 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
-
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
+
+PROJECT_DIR = os.path.dirname(__file__)
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '#bzf+3ho^kr2rnnc_1iooav_7ven)@4k(ku94z&0!1o4ner-s6'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+
+##################################################
+# THE FOLLOWING LINES WERE ADDED FOR DEVELOPMENT:
+if DEBUG:
+    STATICFILES_DIRS = (
+        os.path.join(PROJECT_DIR, 'static'),
+    )
+
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+)
+##################################################
+
+
 
 TEMPLATE_DEBUG = True
 TEMPLATE_DIRS = [os.path.join(BASE_DIR, 'templates')]
@@ -62,8 +77,10 @@ INSTALLED_APPS = (
     'taggit',
     'taggit_templatetags',
     'qhonuskan_votes',
+    # # # # # # # # # ################
+    # removed 'django-nyt'
+    # ###############################
     'django_notify',
-    #'django_nyt',
     'mptt',
     'sekizai',
     'sorl.thumbnail',
@@ -101,10 +118,14 @@ SOUTH_MIGRATION_MODULES = {
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
 
 DATABASES = { 'default': {
-        'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'modulator',                  # Or path to database file if using sqlite3.
-        'USER': 'dev',                      # Not used with sqlite3.
-        'PASSWORD': 'l3rAInzRck',                  # Not used with sqlite3.
+        # 'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+        # 'NAME': 'modulator',                  # Or path to database file if using sqlite3.
+        # 'USER': 'dev',                      # Not used with sqlite3.
+        # 'PASSWORD': 'l3rAInzRck',                  # Not used with sqlite3.
+        'ENGINE': 'django.db.backends.sqlite3',  # this just added for development
+        'NAME': 'devdb',  # again, just added for development
+        'USER': '',
+        'PASSWORD': '',
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
     }
@@ -128,7 +149,6 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, "static/")
-
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, "media/")
 
