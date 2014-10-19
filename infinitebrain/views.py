@@ -7,6 +7,7 @@ from modeldb.models import Model, ModelRelation
 from django.utils import simplejson
 from django.db.models import Q
 from django.views.decorators.csrf import csrf_exempt
+from haystack.views import SearchView
 
 # Create your views here.
 def home(request):

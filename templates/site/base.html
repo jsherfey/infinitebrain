@@ -39,8 +39,7 @@
           </button>
           <a class="navbar-brand" href="/">Infinite Brain</a> {% block headertitle %}{% endblock %}
         </div>
-    	<div class="navbar-collapse collapse" id="login">
-   		{% if user.is_anonymous %}
+      {% if user.is_anonymous %}
         	<form class="navbar-form navbar-right" role="form" name="LoginForm" action="/login/" method="post">
 	 		{% csrf_token %}
 {% comment %}
@@ -64,6 +63,17 @@
 				<button type="submit" class="btn btn-success">Sign out</button>    			
     		</form>
     	{% endif %}
+
+            <!-- Below code adds search functionality to navbar -->
+      <form class="navbar-form navbar-center" role="form" name="SearchForm" action="/search/" method="get">
+        {% csrf_token %}
+        <div class="form-group">
+          <input type="text" type="submit" name="q" placeholder="Search" class="form-control">
+        </div>
+        <button type="submit" class="btn btn-success">Search</button>
+      </form>
+
+
     	</div><!--/.navbar-collapse -->        
       </div>
     </div>   

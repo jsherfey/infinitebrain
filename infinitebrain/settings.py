@@ -69,6 +69,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.sites',
     'django.contrib.comments',
+    'haystack',
     'modeldb',
     'registration',
     'twitter_feed',
@@ -177,6 +178,10 @@ TWITTER_FEED_CONSUMER_SECRET = '22T6k9UfXZ4op4Zw0JwHi2WHRHF2tgzlfYOHfjFPrIy4kmY0
 TWITTER_FEED_OPEN_AUTH_TOKEN = '2270834493-IcR5CNhh9YDpcpUM8KUGqylI6FokHbASdd9QCoa'
 TWITTER_FEED_OPEN_AUTH_SECRET = 'lC9mi67oTzN0bIDmhhbx36JiqcZM4OPvuAPhjSMpG3mWh'
 
-
-
-    
+# HAYSTACK settings. Path is the location of the whoosh index.
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
+        'PATH': os.path.join(BASE_DIR, 'whoosh_index'),
+    },
+}
