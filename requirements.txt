@@ -1,0 +1,16 @@
+Django==1.6
+Python==2.7
+django-registration==1.0
+django-twitter-feed==0.2
+tweepy
+south==1.0
+django-taggit==0.12.2
+django-taggit-templatetags==0.4.6dev
+qhonuskan-votes==0.2
+django-notify==1.1.2
+django-mptt==0.6.1
+sorl-thumbnail==11.12.1b
+django-sekizai==0.7
+wiki==1.1dev
+django-haystack
+whoosh==2.5.7

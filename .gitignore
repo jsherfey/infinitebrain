@@ -4,5 +4,10 @@
 media
 .project
 .metadata
-*.sqlite3
+devdb
+
 infinitebrain/static/
+lib
+build
+.idea
+include

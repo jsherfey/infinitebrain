@@ -65,15 +65,13 @@
     	{% endif %}
 
             <!-- Below code adds search functionality to navbar -->
-      <form class="navbar-form navbar-center" role="form" name="SearchForm" action="/search/" method="get">
+      <form class="navbar-form navbar-left" role="form" name="SearchForm" action="/search/" method="get">
         {% csrf_token %}
         <div class="form-group">
-          <input type="text" type="submit" name="q" placeholder="Search" class="form-control">
+          <input type="text" name="q" placeholder="Search" class="form-control">
         </div>
         <button type="submit" class="btn btn-success">Search</button>
       </form>
-
-
     	</div><!--/.navbar-collapse -->        
       </div>
     </div>   
