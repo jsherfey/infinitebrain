@@ -17,15 +17,40 @@
 
         {% if query or page.object_list %}
             <h3>Results</h3>
-
-            {% for result in page.object_list %}
-                <p>
-                    <a href="{{ result.object.get_absolute_url }}">{{ result.object.title }}</a>
-                </p>
-            {% empty %}
-                <p>No results found.</p>
-            {% endfor %}
-
+                <div class="col-md-12 col-md-offset-0 main">        
+                  <h2 class="sub-header">Models <a href="/models/evolution/">[evolution]</a></h2>
+                  <div class="table-responsive">
+                    <table class="table table-striped">
+                      <thead>
+                        <tr>
+                          <th></th> <!--<th width=20></th>-->
+                          <th>name</th>
+                          <th>description</th>
+                          <th>structure</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for result in page.object_list %}
+                            <tr>
+                                <td>
+                                    <div class="text"><a href="/models/{{results.object.id}}">{{result.object.name}}</a></div>
+                                </td>
+                                <td>
+                                    <div class="edit modelnotes" id="{{model.id}}" name="notes"><font size="2">{{result.object.notes}}</font> <font size="1" color="black"><font color="red">({{result.object.level}}</font> model added by <font color="red" size=1.5><b>{{result.object.username}}</b></font> on <font color="red">{{result.object.date_added}}</font>)</font></div>
+                                </td>
+                                {% if model.d3file and model.d3file != "NULL" %}
+                                    <td class="graph" id="graph{{forloop.counter0}}" name="{{ MEDIA_URL }}{{ model.d3file }}"></td>
+                                {% else %}
+                                    <td class="graph" name=""></td>
+                                {% endif %}
+                            </tr>
+                        {% empty %}
+                            <p>No results found.</p>
+                        {% endfor %}
+                    </tbody>
+                    </table>
+                  </div>
+                </div>
             {% if page.has_previous or page.has_next %}
                 <div>
                     {% if page.has_previous %}<a href="?q={{ query }}&amp;page={{ page.previous_page_number }}">{% endif %}&laquo; Previous{% if page.has_previous %}</a>{% endif %}

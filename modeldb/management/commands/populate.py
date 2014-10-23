@@ -25,13 +25,14 @@ class Command(BaseCommand):
     help = ''
 
     def _create_model(self):
-        model = Model(
-            name='Mike',
-            level='network',
-            notes='practice_populate',
-            privacy='public',
-            )
-        model.save()
+        for i in range(10):
+            model = Model(
+                name=str(i),
+                level='network',
+                notes='practice_populate',
+                privacy='public',
+                )
+            model.save()
 
     def handle(self, *args, **kwargs):
         self._create_model()
