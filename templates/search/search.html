@@ -33,7 +33,7 @@
                         {% for result in page.object_list %}
                             <tr>
                                 <td>
-                                    <div class="text"><a href="/models/{{results.object.id}}">{{result.object.name}}</a></div>
+                                    <div class="text"><a href="/models/{{result.object.id}}">{{result.object.name}}</a></div>
                                 </td>
                                 <td>
                                     <div class="edit modelnotes" id="{{model.id}}" name="notes"><font size="2">{{result.object.notes}}</font> <font size="1" color="black"><font color="red">({{result.object.level}}</font> model added by <font color="red" size=1.5><b>{{result.object.username}}</b></font> on <font color="red">{{result.object.date_added}}</font>)</font></div>
