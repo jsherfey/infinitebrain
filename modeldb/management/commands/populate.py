@@ -27,7 +27,7 @@ class Command(BaseCommand):
     def _create_model(self):
         for i in range(10):
             model = Model(
-                name=str(i),
+                name='hello',
                 level='network',
                 notes='practice_populate',
                 privacy='public',

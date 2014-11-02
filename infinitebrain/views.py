@@ -27,7 +27,8 @@ def login_user(request):
             if user.is_active:
                 login(request, user)
                 return HttpResponseRedirect('/dashboard/')#HttpResponseRedirect('/dashboard/')
-    return render_to_response('login.html', context_instance=RequestContext(request))
+    # return render_to_response('login.html', context_instance=RequestContext(request))
+    return render(request, 'site/home.html', {'auth_failed': True})
 
 def logout_user(request):
     logout(request)

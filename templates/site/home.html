@@ -11,6 +11,9 @@
 {% endblock %}
 		
 {% block content %}
+    {% if auth_failed %}
+      <div class="alert alert-danger text-center" role="alert">Wrong username and/or password!</div>
+    {% endif %}
     {% block "jumbotron" %}
     <!-- Main jumbotron for a primary marketing message or call to action -->
     <div class="jumbotron">

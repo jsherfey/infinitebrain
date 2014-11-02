@@ -3,18 +3,6 @@
 {% block content %}
     <h2>Search</h2>
     <div class="container">
-    <form method="get" action="." role="form" name="SearchForm">
-        <table>
-            {{ form }}
-            <tr>
-                <td>&nbsp;</td>
-                <td>
-<!--                     <input type="submit" value="Search"> -->
-                    <button type="submit" class="btn btn-success">Search</button>
-                </td>
-            </tr>
-        </table>
-
         {% if query or page.object_list %}
             <h3>Results</h3>
                 <div class="col-md-12 col-md-offset-0 main">        
@@ -23,7 +11,7 @@
                     <table class="table table-striped">
                       <thead>
                         <tr>
-                          <th></th> <!--<th width=20></th>-->
+                          <th></th>
                           <th>name</th>
                           <th>description</th>
                           <th>structure</th>
@@ -38,10 +26,15 @@
                                 <td>
                                     <div class="edit modelnotes" id="{{result.object.id}}" name="notes"><font size="2">{{result.object.notes}}</font> <font size="1" color="black"><font color="red">({{result.object.level}}</font> model added by <font color="red" size=1.5><b>{{result.object.username}}</b></font> on <font color="red">{{result.object.date_added}}</font>)</font></div>
                                 </td>
-                                {% if model.d3file and model.d3file != "NULL" %}
-                                    <td class="graph" id="graph{{forloop.counter0}}" name="{{ MEDIA_URL }}{{ model.d3file }}"></td>
+                                {% if result.object.description and result.object.description != "NULL" %}
+                                    <td class="text" id="{{result.object.description}}" name="description">{{result.object.description}}</td>
                                 {% else %}
-                                    <td class="graph" name=""></td>
+                                    <td class="text" name="">None available</td>
+                                {% endif %}
+                                {% if result.object.d3file and result.object.d3file != "NULL" %}
+                                    <td class="graph" id="graph{{forloop.counter0}}" name="{{ MEDIA_URL }}{{ result.object.d3file }}"></td>
+                                {% else %}
+                                    <td class="graph" name="">None available</td>
                                 {% endif %}
                             </tr>
                         {% empty %}
@@ -60,6 +53,5 @@
         {% else %}
             {# Show some example queries to run, maybe query syntax, something else? #}
         {% endif %}
-    </form>
 </div>
 {% endblock %}
