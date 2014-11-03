@@ -27,7 +27,7 @@ def login_user(request):
             if user.is_active:
                 login(request, user)
                 return HttpResponseRedirect('/dashboard/')#HttpResponseRedirect('/dashboard/')
-    # return render_to_response('login.html', context_instance=RequestContext(request))
+    # the following line directs to home page if failed authentication
     return render(request, 'site/home.html', {'auth_failed': True})
 
 def logout_user(request):
@@ -42,3 +42,6 @@ def dashboard(request):
     d = [{"source":r.source.name,"target":r.target.name,"type":"connection"} for r in links]
     link_data = simplejson.dumps(d)
     return render(request, 'site/dashboard.html',{'models': models, "link_data": link_data},context_instance=RequestContext(request))
+
+# the following method overrides Haystack's searchview
+def auth_searchview()
