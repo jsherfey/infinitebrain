@@ -8,6 +8,7 @@ class ModelIndex(indexes.SearchIndex, indexes.Indexable):
     name = indexes.CharField(model_attr='name')
     notes = indexes.CharField(model_attr='notes')
     date_added = indexes.DateTimeField(model_attr='date_added')
+    user = indexes.CharField()
 
     def get_model(self):
         return Model
@@ -16,3 +17,6 @@ class ModelIndex(indexes.SearchIndex, indexes.Indexable):
 # http://django-haystack.readthedocs.org/en/latest/tutorial.html#installation
     def index_queryset(self, using=None):
         return self.get_model().objects.filter(date_added__lte=datetime.datetime.now())
+
+    def prepare_user(self, obj):
+        return obj.user

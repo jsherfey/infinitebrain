@@ -123,8 +123,8 @@ DATABASES = { 'default': {
         'NAME': 'modulator',                  # Or path to database file if using sqlite3.
         'USER': 'dev',                      # Not used with sqlite3.
         'PASSWORD': 'l3rAInzRck',                  # Not used with sqlite3.
-        # 'ENGINE': 'django.db.backends.sqlite3',  # this just added for development
-        # 'NAME': 'devdb',  # again, just added for development
+        'ENGINE': 'django.db.backends.sqlite3',  # this just added for development
+        'NAME': 'devdb',  # again, just added for development
         # 'USER': '',
         # 'PASSWORD': '',
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.

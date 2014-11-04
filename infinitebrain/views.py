@@ -9,6 +9,7 @@ from django.db.models import Q
 from django.views.decorators.csrf import csrf_exempt
 from haystack.views import SearchView
 
+
 # Create your views here.
 def home(request):
     return render(request, 'site/home.html',context_instance=RequestContext(request))#{'user': request.user})
@@ -26,7 +27,7 @@ def login_user(request):
         if user is not None:
             if user.is_active:
                 login(request, user)
-                return HttpResponseRedirect('/dashboard/')#HttpResponseRedirect('/dashboard/')
+                return HttpResponseRedirect('/dashboard/')
     # the following line directs to home page if failed authentication
     return render(request, 'site/home.html', {'auth_failed': True})
 
@@ -43,5 +44,18 @@ def dashboard(request):
     link_data = simplejson.dumps(d)
     return render(request, 'site/dashboard.html',{'models': models, "link_data": link_data},context_instance=RequestContext(request))
 
-# the following method overrides Haystack's searchview
-def auth_searchview()
+
+class AuthenticatedSearchView(SearchView):
+
+    def get_results(self):
+        results = super(AuthenticatedSearchView, self).get_results()
+        no_user = results.filter(user=None)
+        # next line is for 
+        # self.request.user = authenticate(username='john', password='johnpassword')
+        if self.request.user.is_authenticated():
+            results = results.filter(user=self.request.user)
+            results = results | no_user
+        else:
+            results = no_user
+        results = results.order_by('-date_added')
+        return results

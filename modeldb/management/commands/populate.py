@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 from modeldb.models import Model, ModelSpec, ModelRelation
-
+from django.contrib.auth.models import User
 
 # Fields for Model are as follows:
 '''
@@ -20,6 +20,9 @@ Model(models.Model)
     objects_with_scores = ObjectsWithScoresManager() #For just a list of objects that are not ordered that can be customized.
     sort_by_score
 '''
+
+user = User.objects.create_user('john', 'lennon@thebeatles.com', 'johnpassword')
+user.save()
 class Command(BaseCommand):
     args = ''
     help = ''
@@ -27,12 +30,20 @@ class Command(BaseCommand):
     def _create_model(self):
         for i in range(10):
             model = Model(
-                name='hello',
+                name='Johns model',
                 level='network',
-                notes='practice_populate',
+                notes='john',
                 privacy='public',
+                user = User.objects.get(username='john'),
                 )
             model.save()
 
+    # def _create_user(self):
+    #     model = User('john', 'lennon@thebeatles.com', 'johnpassword');
+    #     model.save()
+    #     model = User('jimmy', 'carter@thebeatles.com', 'johnpassword');
+    #     model.save()
+
     def handle(self, *args, **kwargs):
+        # self._create_user()
         self._create_model()

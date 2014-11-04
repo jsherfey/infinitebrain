@@ -6,6 +6,9 @@ from django_notify.urls import get_pattern as get_nyt_pattern
 import qhonuskan_votes.urls
 admin.autodiscover()
 import haystack
+from haystack.views import SearchView
+from haystack.forms import ModelSearchForm
+from views import AuthenticatedSearchView
 
 urlpatterns = patterns('',
     # Examples:
@@ -25,5 +28,12 @@ urlpatterns = patterns('',
     url(r'^setup/', 'infinitebrain.views.setup'),
     url(r'^notifications/', get_nyt_pattern()),
     url(r'^wiki/', get_wiki_pattern()),
-    url(r'^search/', include('haystack.urls')),
+    # url(r'^search/', include('haystack.urls')),
 )
+
+# the following will 
+urlpatterns += patterns('haystack.views',
+    url(r'^search/',AuthenticatedSearchView(
+        ),
+    name='haystack_search'),
+    )
