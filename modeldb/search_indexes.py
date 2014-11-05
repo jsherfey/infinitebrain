@@ -10,6 +10,7 @@ class ModelIndex(indexes.SearchIndex, indexes.Indexable):
     date_added = indexes.DateTimeField(model_attr='date_added')
     user = indexes.CharField()
     privacy = indexes.CharField(model_attr='privacy')
+    tags = indexes.CharField()
 
     def get_model(self):
         return Model
@@ -21,3 +22,6 @@ class ModelIndex(indexes.SearchIndex, indexes.Indexable):
 
     def prepare_user(self, obj):
         return obj.user
+
+    def prepare_tags(self, obj):
+        return ' '.join(obj.tags.names()))
