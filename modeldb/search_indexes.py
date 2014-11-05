@@ -24,4 +24,4 @@ class ModelIndex(indexes.SearchIndex, indexes.Indexable):
         return obj.user
 
     def prepare_tags(self, obj):
-        return ' '.join(obj.tags.names()))
+        return ' '.join(obj.tags.names())
