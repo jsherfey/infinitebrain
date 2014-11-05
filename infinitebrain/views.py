@@ -53,6 +53,6 @@ class AuthenticatedSearchView(SearchView):
         if self.request.user.is_authenticated():
             results = results.filter(Q(user=self.request.user) | Q(user=None) | Q(privacy='public'));
         else:
-            results = results.filter(Q(user=None) | Q(privacy='public') | Q(privacy='unlisted'));
+            results = results.filter(Q(user=None) | Q(privacy='public'));
         results = results.order_by('-date_added')
         return results
