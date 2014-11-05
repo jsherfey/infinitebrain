@@ -46,11 +46,10 @@ def dashboard(request):
 
 
 class AuthenticatedSearchView(SearchView):
-
     def get_results(self):
         results = super(AuthenticatedSearchView, self).get_results()
         no_user = results.filter(user=None)
-        # next line is for 
+        # next line is for development
         # self.request.user = authenticate(username='john', password='johnpassword')
         if self.request.user.is_authenticated():
             results = results.filter(user=self.request.user)
