@@ -29,13 +29,13 @@
                                 {% if result.object.description and result.object.description != "NULL" %}
                                     <td class="text" id="{{result.object.description}}" name="description">{{result.object.description}}</td>
                                 {% else %}
-                                    <td class="text" name="">None available</td>
+                                    <td class="text" name="">No description available</td>
                                 {% endif %}
-                                {% if result.object.d3file and result.object.d3file != "NULL" %}
+                         <!--        {% if result.object.d3file and result.object.d3file != "NULL" %}
                                     <td class="graph" id="graph{{forloop.counter0}}" name="{{ MEDIA_URL }}{{ result.object.d3file }}"></td>
                                 {% else %}
                                     <td class="graph" name="">None available</td>
-                                {% endif %}
+                                {% endif %} -->
                             </tr>
                         {% empty %}
                             <p>No results found.</p>
