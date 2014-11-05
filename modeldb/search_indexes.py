@@ -9,6 +9,7 @@ class ModelIndex(indexes.SearchIndex, indexes.Indexable):
     notes = indexes.CharField(model_attr='notes')
     date_added = indexes.DateTimeField(model_attr='date_added')
     user = indexes.CharField()
+    privacy = indexes.CharField(model_attr='privacy')
 
     def get_model(self):
         return Model
