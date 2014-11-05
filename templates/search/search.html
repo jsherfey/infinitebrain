@@ -12,9 +12,9 @@
                       <thead>
                         <tr>
                           <th>name</th>
-                          <th>notes</th>
                           <th>description</th>
-                          <th>structure</th>
+<!--                           <th>description</th>
+ -->                   <!--        <th>structure</th> -->
                         </tr>
                       </thead>
                       <tbody>
@@ -26,7 +26,7 @@
                                 <td>
                                     <div class="edit modelnotes" id="{{result.object.id}}" name="notes"><font size="2">{{result.object.notes}}</font> <font size="1" color="black"><font color="red">({{result.object.level}}</font> model added by <font color="red" size=1.5><b>{{result.object.username}}</b></font> on <font color="red">{{result.object.date_added}}</font>)</font></div>
                                 </td>
-                                {% if result.object.description and result.object.description != "NULL" %}
+                                <!-- {% if result.object.description and result.object.description != "NULL" %}
                                     <td class="text" id="{{result.object.description}}" name="description">{{result.object.description}}</td>
                                 {% else %}
                                     <td class="text" name="">None available</td>
@@ -35,7 +35,7 @@
                                     <td class="graph" id="graph{{forloop.counter0}}" name="{{ MEDIA_URL }}{{ result.object.d3file }}"></td>
                                 {% else %}
                                     <td class="graph" name="">None available</td>
-                                {% endif %}
+                                {% endif %} -->
                             </tr>
                         {% empty %}
                             <p>No results found.</p>
