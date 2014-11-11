@@ -9,12 +9,20 @@ from taggit.managers import TaggableManager
 from qhonuskan_votes.models import VotesField, ObjectsWithScoresManager, SortByScoresManager
 
 # Create your models here.
+class Project(models.Model):
+    owner = models.ForeignKey(User)
+    name = models.CharField(max_length=200)
+    def __unicode__(self):
+        return self.name
+
 class Model(models.Model):
+    project = models.ForeignKey(Project, blank=True, null=True, related_name='project_model')
     user = models.ForeignKey(User, blank=True, null=True, related_name='user_model')
     name=models.CharField(max_length=1000)
     level=models.CharField(max_length=10, default='network') # options: {mechanism, node, network}
     notes=models.CharField(max_length=10000, default='')
     privacy=models.CharField(max_length=10, default='unlisted') # options: {private, public, unlisted}
+    ispublished=models.BooleanField(default=False); # attribute added to speed up third-party API queries
     rating = models.IntegerField(default=0) 
     d3file = models.FileField(storage=FileSystemStorage(location=settings.MEDIA_ROOT), upload_to='models',null=True)
     readmefile = models.FileField(storage=FileSystemStorage(location=settings.MEDIA_ROOT), upload_to='models',null=True)
@@ -31,6 +39,8 @@ class Model(models.Model):
     was_added_recently.admin_order_field = 'date_added'
     was_added_recently.boolean = True
     was_added_recently.short_description = 'Added recently?'
+    # def ispublished(self):
+    #     ... Citation...
         
 class ModelSpec(models.Model):
     model =models.ForeignKey(Model)
@@ -49,3 +59,11 @@ class ModelRelation(models.Model):
     def __unicode__(self):
         return str(self.source) + ' -> ' + str(self.target)
  
+class Citation(models.Model):
+    model = models.ForeignKey(Model) # cited model
+    title = models.CharField(max_length=500) # this will appear in the model list
+    citation = models.CharField(max_length=1000) # (e.g., formal or informal reference)
+    about = models.CharField(max_length=5000) # (e.g., abstract, comments, description)
+    url = models.CharField(max_length=500) # (e.g., pubmed, personal site)
+    def __unicode__(self):
+        return self.title

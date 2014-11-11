@@ -2,7 +2,7 @@ import os, json, shutil, sys
 import os.path
 os.environ['DJANGO_SETTINGS_MODULE']='infinitebrain.settings'
 
-from modeldb.models import Model, ModelSpec, ModelRelation
+from modeldb.models import Model, ModelSpec, ModelRelation, Project, Citation
 from django.contrib.auth.models import User
 from django.utils import timezone
 
@@ -37,6 +37,12 @@ try:
     username = data['username']
     level = data['level']
     notes = data['notes']
+    ispublished = data['ispublished']
+    projectname = data['projectname']
+    citationtitle = data['citationtitle']
+    citationstring = data['citationstring']
+    citationurl = data['citationurl']
+    citationabout = data['citationabout']
     privacy = data['privacy']
     if not privacy:
         privacy = 'public'
@@ -56,13 +62,34 @@ try:
     tags = data['tags']
     tags = tags.replace(' ','').split(',')
     
-    print "creating new database record for model..."
+    # get user
     u = User.objects.filter(username=username)[0]
-    m = Model(user=u,name=modelname,level=level,notes=notes,privacy=privacy,date_added=timezone.now()) # ,d3file=d3file,readmefile=readmefile
+    
+    # Project
+    if projectname:
+        p = Project.objects.filter(name=projectname)
+        if p:
+            p=p[0]
+        else:
+            print "creating new database record for project..."
+            p=Project(owner=u,name=projectname)
+            p.save()
+        print "creating new database record for model..."
+        m = Model(user=u,project=p,name=modelname,level=level,notes=notes,privacy=privacy,ispublished=(ispublished=='1'),date_added=timezone.now()) # ,d3file=d3file,readmefile=readmefile
+    else:
+        print "creating new database record for model..."
+        m = Model(user=u,name=modelname,level=level,notes=notes,privacy=privacy,ispublished=(ispublished=='1'),date_added=timezone.now()) # ,d3file=d3file,readmefile=readmefile
     m.save()
     m.tags.add(*tags)
     m.save()
     
+    # Citation
+    if ispublished=='1':
+        print "creating new database record for citation..."
+        c = Citation(model=m,title=citationtitle,citation=citationstring,url=citationurl,about=citationabout)
+        c.save()
+    
+    # File handling
     USER_MEDIA = 'user/' + username + '/models/'
     if not os.path.isdir(MEDIA_PATH + USER_MEDIA):
          os.makedirs(MEDIA_PATH + USER_MEDIA)
