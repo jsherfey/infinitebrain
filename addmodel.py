@@ -135,11 +135,14 @@ try:
     # Model Relations
     print "adding model relations based on parent_uids..."
     for source in sources:
-        src=Model.objects.get(pk=source.strip())
-        if src:
-            rel=ModelRelation(source=src,target=m)
-            rel.save()
-            print rel
+        try:
+            src=Model.objects.get(pk=source.strip())
+            if src:
+                rel=ModelRelation(source=src,target=m)
+                rel.save()
+                print rel
+        except:
+            print "failed to add model relation."
     
     print "success."
     os.remove(lockfile)
