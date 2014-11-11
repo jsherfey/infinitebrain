@@ -1,5 +1,5 @@
 from django.shortcuts import redirect, render, get_object_or_404, render_to_response
-from modeldb.models import Model, ModelSpec, ModelRelation
+from modeldb.models import Model, ModelSpec, ModelRelation, Project, Citation
 from django.utils import simplejson
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext #, loader
