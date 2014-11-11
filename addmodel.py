@@ -75,16 +75,16 @@ try:
             p=Project(owner=u,name=projectname)
             p.save()
         print "creating new database record for model..."
-        m = Model(user=u,project=p,name=modelname,level=level,notes=notes,privacy=privacy,ispublished=(ispublished=='1'),date_added=timezone.now()) # ,d3file=d3file,readmefile=readmefile
+        m = Model(user=u,project=p,name=modelname,level=level,notes=notes,privacy=privacy,ispublished=(ispublished==1),date_added=timezone.now()) # ,d3file=d3file,readmefile=readmefile
     else:
         print "creating new database record for model..."
-        m = Model(user=u,name=modelname,level=level,notes=notes,privacy=privacy,ispublished=(ispublished=='1'),date_added=timezone.now()) # ,d3file=d3file,readmefile=readmefile
+        m = Model(user=u,name=modelname,level=level,notes=notes,privacy=privacy,ispublished=(ispublished==1),date_added=timezone.now()) # ,d3file=d3file,readmefile=readmefile
     m.save()
     m.tags.add(*tags)
     m.save()
     
     # Citation
-    if ispublished=='1':
+    if ispublished==1:
         print "creating new database record for citation..."
         c = Citation(model=m,title=citationtitle,citation=citationstring,url=citationurl,about=citationabout)
         c.save()
