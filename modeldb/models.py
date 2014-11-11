@@ -60,7 +60,7 @@ class ModelRelation(models.Model):
         return str(self.source) + ' -> ' + str(self.target)
  
 class Citation(models.Model):
-    model = models.ForeignKey(Model) # cited model
+    model = models.ForeignKey(Model, related_name='model_citation') # cited model
     title = models.CharField(max_length=500) # this will appear in the model list
     citation = models.CharField(max_length=1000) # (e.g., formal or informal reference)
     about = models.CharField(max_length=5000) # (e.g., abstract, comments, description)
