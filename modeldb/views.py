@@ -63,7 +63,8 @@ def edit(request):
 @csrf_exempt    
 def delete(request):
     id=request.POST['id']
-    model = get_object_or_404(Model, pk=id)
+    model = Model.objects.filter(id=id)
+    #model = get_object_or_404(Model, pk=id)
     model.delete()
     # delete associated files and other objects (ModelRelation, Files...)
     # TODO: make model function that deletes all associated objects and files then itself    
