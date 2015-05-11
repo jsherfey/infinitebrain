@@ -6,6 +6,7 @@ from django.template import RequestContext #, loader
 from django.db.models import Q
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
 #from django.views.decorators.csrf import ensure_csrf_cookie
 #@ensure_csrf_cookie
 
@@ -78,6 +79,7 @@ def delete(request):
     #link_data = simplejson.dumps(d)
     #return render(request, 'site/dashboard.html',{'models': models, "link_data": link_data},context_instance=RequestContext(request))
 
+@login_required
 def add_model(request):
     if request.method == 'GET':
         # Get all of the projects for the current user
@@ -85,9 +87,42 @@ def add_model(request):
         return render(request, 'modeldb/add_model.html', {'projects': projects})
     else:
         '''
-        process the form
+        First, locate the project
         '''
+        owner = request.user;
+        if (request.POST['project'] == 'newproject' and request.POST['projectname'] != ''):
+            projectname = request.POST['projectname']
+        else:
+            projectname = request.POST['project']
+        
+        project, created = Project.objects.get_or_create(owner=owner,name=projectname)
+        if created:
+            project.save()
         '''
-        first, get all of the objects associated with the current user
+        Then add the model to the project
         '''
+
+        modelname = request.POST['modelname']
+        level = request.POST['level']
+        notes = request.POST['notes']
+        ispublished = request.POST['ispublished']
+        privacy = request.POST['privacy']
+        model = Model(name=modelname,
+            user=owner,
+            project=project,
+            level=level,
+            ispublished=ispublished,
+            privacy=privacy)
+        model.save()
+        '''
+        Now, handle citations
+        '''
+        if model.ispublished:
+            citationtitle = request.POST['citationtitle']
+            citationstring = request.POST['citationstring']
+            citationurl = request.POST['citationurl']
+            citationabout = request.POST['citationabout']
+            c = Citation(model=model,title=citationtitle,citation=citationstring,url=citationurl,about=citationabout)
+            c.save()
+
         return HttpResponseRedirect('/dashboard/')
