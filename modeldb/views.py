@@ -8,6 +8,7 @@ from django.views.decorators.csrf import csrf_exempt, csrf_protect
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from taggit.models import Tag
+import os
 #from django.views.decorators.csrf import ensure_csrf_cookie
 #@ensure_csrf_cookie
 
@@ -16,7 +17,7 @@ def index(request):
     #models = Model.objects.order_by('-date_added')#[:5]
     models = Model.sort_by_score.all().filter(~Q(level='mechanism'), Q(privacy='public'))#.order_by('-date_added')
     context = {'models': models}
-    return render(request, 'modeldb/index.html', context,context_instance=RequestContext(request))
+    return render(request, 'modeldb/index.html', context, context_instance=RequestContext(request))
     # Note: The render() function takes the request object as its first argument, a template name as its second argument and a dictionary as its optional third argument. It returns an HttpResponse object of the given template rendered with the given context.
     #template = loader.get_template('modeldb/index.html')
     #context = RequestContext(request, {'latest_model_list': latest_model_list})
@@ -82,28 +83,8 @@ def delete(request):
 
 @login_required
 def add_model(request):
-    if request.method == 'GET':
-        # Get all of the projects for the current user
-        projects = Project.objects.filter(owner=request.user)
-        tags = Tag.objects.all()[:5]
-        return render(request, 'modeldb/add_model.html', {'projects': projects, 'tags': tags})
-    else:
-        print(request.POST)
-        '''
-        First, locate the project
-        '''
-        owner = request.user;
-        if (request.POST['project'] == 'newproject' and request.POST['projectname'] != ''):
-            projectname = request.POST['projectname']
-        else:
-            projectname = request.POST['project']
-        
-        project, created = Project.objects.get_or_create(owner=owner,name=projectname)
-        if created:
-            project.save()
-        '''
-        Then add the model and tags to the project
-        '''
+
+    def save_model(request, owner, project):
         modelname = request.POST['name']
         level = request.POST.get('level','network')
         notes = request.POST['notes']
@@ -119,8 +100,65 @@ def add_model(request):
             privacy=privacy,
             )
         model.save()
-        for tag in tags: model.tags.add(tag)
-        for tag in newtags: model.tags.add(tag)
+        model.tags.add(*tags)
+        model.tags.add(*newtags)
+        model.readmefile=upload_and_save_readme(request, model)
+        model.save()
+        return model
+
+    def upload_and_save_spec(request, model, filetype):
+        USER_MEDIA = 'user/' + request.user.username + '/models/'
+        MEDIA_PATH = '/project/infinitebrain/media/'
+        # # for practice:
+        # MEDIA_PATH = '/Users/michaelromano/practice/'
+        filename = request.FILES['specfile']
+        extension = filename.content_type.split('/')[1]
+        rel_path = USER_MEDIA + 'model' + str(model.pk) + '_spec.' + extension
+        with open(MEDIA_PATH+rel_path, 'wb') as writefile:
+            for chunk in filename.chunks():
+                writefile.write(chunk)
+        m = ModelSpec(model=model, file=rel_path,type=filetype)
+        m.save()
+
+    def upload_and_save_readme(request, model):
+        USER_MEDIA = 'user/' + request.user.username + '/models/'
+        MEDIA_PATH = '/project/infinitebrain/media/'
+        # MEDIA_PATH = '/Users/michaelromano/practice/'
+        filename = request.FILES['readme']
+        extension = filename.content_type.split('/')[1]
+        if not os.path.isdir(MEDIA_PATH + USER_MEDIA):
+            os.makedirs(MEDIA_PATH + USER_MEDIA)
+        rel_path = USER_MEDIA + 'model' + str(model.pk) + '_readme.txt'
+        with open(MEDIA_PATH+rel_path, 'wb') as writefile:
+            for chunk in filename.chunks():
+                writefile.write(chunk)
+        return rel_path
+
+
+    if request.method == 'GET':
+        # Get all of the projects for the current user
+        projects = Project.objects.filter(owner=request.user)
+        tags = Tag.objects.all()[:5]
+        return render(request, 'modeldb/add_model.html', {'projects': projects, 'tags': tags})
+    else:
+        '''
+        First, locate the project
+        '''
+        owner = request.user;
+        if (request.POST['project'] == 'newproject' and request.POST['projectname'] != ''):
+            projectname = request.POST['projectname']
+        else:
+            projectname = request.POST['project']
+        
+        project, created = Project.objects.get_or_create(owner=owner,name=projectname)
+        if created:
+            project.save()
+        '''
+        Then add the model and tags to the project
+        '''
+        model = save_model(request,owner, project)
+        upload_and_save_spec(request, model, request.POST.get('filetype'))
+        
         '''
         Now, handle citations
         '''

@@ -104,6 +104,8 @@ try:
         specfile = USER_MEDIA + 'model' + str(m.pk) + '_spec.json'
         shutil.copy2(jsonfile,MEDIA_PATH+specfile)
     os.remove(jsonfile)
+
+    
     if os.path.isfile(tempd3file):
         m.d3file = USER_MEDIA + 'model' + str(m.pk) + '_d3.json'
         shutil.copy2(tempd3file,MEDIA_PATH+str(m.d3file))

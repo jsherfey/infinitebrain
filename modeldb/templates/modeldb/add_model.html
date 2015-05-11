@@ -1,14 +1,37 @@
 {% extends "site/base.html" %}
 {% load staticfiles %}
 {% block statichead %}
+
     <link rel="stylesheet" type="text/css" href="{% static 'modeldb/dashboard.css' %}" />
+<!-- following code is from: http://www.abeautifulsite.net/whipping-file-inputs-into-shape-with-bootstrap-3/ -->
+    <style type="text/css">
+    .btn-file {
+        position: relative;
+        overflow: hidden;
+    }
+    .btn-file input[type=file] {
+        position: absolute;
+        top: 0;
+        right: 0;
+        min-width: 100%;
+        min-height: 100%;
+        font-size: 100px;
+        text-align: right;
+        filter: alpha(opacity=0);
+        opacity: 0;
+        outline: none;
+        background: white;
+        cursor: inherit;
+        display: block;
+    }
+    </style>
 {% endblock %}
 {% block content %}
     <div class="container-fluid">
         <div class="col-md-6 col-md-offset-2">
             <h1 class="page-header">Please enter your model details:</h1>
             <!-- <form action="/models/modeldb/" method="post"> -->
-            <form action="/models/add/" method="post">
+            <form action="/models/add/" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 <h4> Select a project </h4>
 
@@ -76,8 +99,8 @@
                         <input class="form-control" type="text" name="citationabout" id="citationabout"/>
                     </div>
                 </div>
-
-                <h4>Add tags to your model</h4>
+                
+                <h4>Tags</h4>
                 <div class="form-group">
                     {% for tag in tags %}
                     <input type="checkbox" value= {{tag.name}} id={{tag.name}} name="tag[]" />
@@ -89,7 +112,39 @@
                     </div>
                 </div>
 
-                <input type="submit" value="Submit" />    
+                <!-- Add files to the model. CSS and HTML from http://www.abeautifulsite.net/whipping-file-inputs-into-shape-with-bootstrap-3/-->
+                <h4>Upload your model</h4>
+                <div class="col-lg-6 col-sm-6 col-12 input-group">
+                    <div class="input-group">
+                        <span class="input-group-btn">
+                            <span class="file-input btn-primary btn btn-file">
+                                Browse&hellip;<input required="required" id="file" type="file" name="specfile" multiple>
+                            </span>
+                        </span>
+                        <input type="text" class="form-control" readonly/>
+                    </div>
+                </div>
+                
+                </br>
+                <div class="input-group">
+                    <label for="filetype">Type of file:</label>
+                    <input type="text" class="form-control" name="filetype" required="required" id="filetype"/>
+                </div>
+                <h4>Upload a readme file</h4>
+                <div class="col-lg-6 col-sm-6 col-12 input-group">
+                    <div class="input-group">
+                        <span class="input-group-btn">
+                            <span class="file-input btn-primary btn btn-file">
+                                Browse&hellip;<input required="required" id="readme" type="file" name="readme">
+                            </span>
+                        </span>
+                        <input type="text" class="form-control" readonly/>
+                    </div>
+                </div>
+                </br>
+                <div class="input-group">
+                    <input type="submit" value="Submit" />  
+                </div>
             </form>
         </div>
     </div>
@@ -105,7 +160,7 @@
             else {
                 $("#citations").hide();
             }
-    })
+        });
         $("input[name$='project']").click(function() {
             if ($(this).val() == "newproject") {
                 $("#newprojectentry").show();
@@ -114,10 +169,30 @@
                 $("#newprojectentry").hide();
             }
         });
+// following code is from: http://www.abeautifulsite.net/whipping-file-inputs-into-shape-with-bootstrap-3/
+        $('.btn-file :file').on('fileselect', function(event, numFiles, label) {
+        
+        var input = $(this).parents('.input-group').find(':text'),
+            log = numFiles > 1 ? numFiles + ' files selected' : label;
+        
+        if( input.length ) {
+            input.val(log);
+        } else {
+            if( log ) alert(log);
+        }
+        });
 });
+    // following code is from: http://www.abeautifulsite.net/whipping-file-inputs-into-shape-with-bootstrap-3/
+    $(document).on('change', '.btn-file :file', function() {
+      var input = $(this),
+          numFiles = input.get(0).files ? input.get(0).files.length : 1,
+          label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+      input.trigger('fileselect', [numFiles, label]);
+    });
 </script>
 {% endblock %}
 
 {% block staticbody %}
+
 {% endblock %}
 <!-- ADD JQUERY TO CONVERT FORM DATA TO JSON -->
