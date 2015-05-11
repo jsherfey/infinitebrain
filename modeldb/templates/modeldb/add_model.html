@@ -77,6 +77,18 @@
                     </div>
                 </div>
 
+                <h4>Add tags to your model</h4>
+                <div class="form-group">
+                    {% for tag in tags %}
+                    <input type="checkbox" value= {{tag.name}} id={{tag.name}} name="tag[]" />
+                    <label for={{tag.name}}>{{tag.name}}</label>
+                    {% endfor %}
+                    <div class="form-group">
+                        <label for="newtags">Add new tags:</label>
+                        <input type="text" id="newtags" name="newtags"/>
+                    </div>
+                </div>
+
                 <input type="submit" value="Submit" />    
             </form>
         </div>

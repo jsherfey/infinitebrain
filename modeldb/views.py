@@ -7,6 +7,7 @@ from django.db.models import Q
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
+from taggit.models import Tag
 #from django.views.decorators.csrf import ensure_csrf_cookie
 #@ensure_csrf_cookie
 
@@ -81,12 +82,13 @@ def delete(request):
 
 @login_required
 def add_model(request):
-    print(request)
     if request.method == 'GET':
         # Get all of the projects for the current user
         projects = Project.objects.filter(owner=request.user)
-        return render(request, 'modeldb/add_model.html', {'projects': projects})
+        tags = Tag.objects.all()[:5]
+        return render(request, 'modeldb/add_model.html', {'projects': projects, 'tags': tags})
     else:
+        print(request.POST)
         '''
         First, locate the project
         '''
@@ -100,21 +102,25 @@ def add_model(request):
         if created:
             project.save()
         '''
-        Then add the model to the project
+        Then add the model and tags to the project
         '''
-        print(request)
         modelname = request.POST['name']
         level = request.POST.get('level','network')
         notes = request.POST['notes']
         ispublished = request.POST.get('ispublished', False)
         privacy = request.POST.get('privacy','unlisted')
+        tags = request.POST.getlist('tag[]', '')
+        newtags = request.POST.get('newtags').replace(',',' ').split()
         model = Model(name=modelname,
             user=owner,
             project=project,
             level=level,
             ispublished=ispublished,
-            privacy=privacy)
+            privacy=privacy,
+            )
         model.save()
+        for tag in tags: model.tags.add(tag)
+        for tag in newtags: model.tags.add(tag)
         '''
         Now, handle citations
         '''
