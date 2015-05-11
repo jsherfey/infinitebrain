@@ -81,6 +81,7 @@ def delete(request):
 
 @login_required
 def add_model(request):
+    print(request)
     if request.method == 'GET':
         # Get all of the projects for the current user
         projects = Project.objects.filter(owner=request.user)
@@ -101,12 +102,12 @@ def add_model(request):
         '''
         Then add the model to the project
         '''
-
-        modelname = request.POST['modelname']
-        level = request.POST['level']
+        print(request)
+        modelname = request.POST['name']
+        level = request.POST.get('level','')
         notes = request.POST['notes']
-        ispublished = request.POST['ispublished']
-        privacy = request.POST['privacy']
+        ispublished = request.POST.get('ispublished','')
+        privacy = request.POST.get('privacy','')
         model = Model(name=modelname,
             user=owner,
             project=project,

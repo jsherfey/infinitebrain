@@ -83,6 +83,9 @@
     </div>
     <script>
     $(document).ready(function() {
+        $("#newprojectentry").hide();
+        $("#citations").hide();
+        
         $("input[name$='ispublished']").click(function() {
             if ($(this).val() == "True") {
                 $("#citations").show();
@@ -90,10 +93,9 @@
             else {
                 $("#citations").hide();
             }
-                ;
-    });
+    })
         $("input[name$='project']").click(function() {
-            if ($(this.val() == "newproject")) {
+            if ($(this).val() == "newproject") {
                 $("#newprojectentry").show();
             }
             else {
