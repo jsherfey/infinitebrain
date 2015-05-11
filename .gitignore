@@ -5,7 +5,6 @@ media
 .project
 .metadata
 devdb
-
 infinitebrain/static/
 lib
 build

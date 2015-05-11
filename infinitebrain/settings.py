@@ -13,7 +13,6 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
-
 PROJECT_DIR = os.path.dirname(__file__)
 
 # SECURITY WARNING: keep the secret key used in production secret!
@@ -22,18 +21,10 @@ SECRET_KEY = '#bzf+3ho^kr2rnnc_1iooav_7ven)@4k(ku94z&0!1o4ner-s6'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-##################################################
-# THE FOLLOWING LINES WERE ADDED FOR DEVELOPMENT:
-if DEBUG:
-    STATICFILES_DIRS = (
-        os.path.join(PROJECT_DIR, 'static'),
-    )
-
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 )
-##################################################
 
 
 

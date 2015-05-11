@@ -106,7 +106,7 @@ def add_model(request):
         modelname = request.POST['name']
         level = request.POST.get('level','network')
         notes = request.POST['notes']
-        ispublished = request.POST.get('ispublished',False)
+        ispublished = request.POST.get('ispublished', False)
         privacy = request.POST.get('privacy','unlisted')
         model = Model(name=modelname,
             user=owner,
