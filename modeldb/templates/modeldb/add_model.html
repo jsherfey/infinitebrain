@@ -1,0 +1,90 @@
+{% extends "site/base.html" %}
+{% load staticfiles %}
+{% block statichead %}
+    <link rel="stylesheet" type="text/css" href="{% static 'modeldb/dashboard.css' %}" />
+{% endblock %}
+{% block content %}
+    <div class="container-fluid">
+        <div class="col-md-6 col-md-offset-2">
+            <h1 class="page-header">Please enter your model details:</h1>
+            <!-- <form action="/models/modeldb/" method="post"> -->
+            <form action="/models/add/" method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="modelname">Model name</label>
+                    <input class="form-control" id="modelname" type="text" name="name" required="required"/>
+                </div>
+
+                <!-- Notes -->
+                <div class="form-group">
+                    <label for="notes">Notes </label>
+                    <input id="notes" class="form-control" type="text" name="notes"/></br>
+                </div>
+
+                <h4>Level</h4>
+                <div class="form-group">
+                <!-- Radio buttons for level field -->
+                    <input id="mechanism" type="radio" name="level" value="mechanism" />
+                    <label for="mechanism">Mechanism</label>
+                    <input id="node" type="radio" name="level" value="node"/>
+                    <label for="node">Node</label>
+                    <input id="network" type="radio" name="level" value="network"/>
+                    <label for="network">Network </label>
+                </div>
+
+                <h4>Privacy</h4>
+                <div class="form-group">
+                <!-- Privacy -->
+
+                    <input id="private" type="radio" name="privacy" value="private"/>
+                    <label for="private">private</label>
+                    <input id="public" type="radio" name="privacy" value="public"/>
+                    <label for="public">public</label>
+                </div>
+                <!-- is published -->
+                <h4>Is this model published?</h4>
+                <div class="form-group">
+
+                    <input id="ispublished" type="radio" name="ispublished" value="True"/>
+                    <label for="ispublisehd">Yes</label>
+                    <input id="notpublished" type="radio" name="ispublished" value="False"/>
+                    <label for="notpublished">No</label>
+
+                    <div class="form-group" id="citations">
+                        <label for="citationtitle">Title of citation</label>
+                        <input class="form-control" type="text" name="citationtitle" id="citationtitle"/>
+                        <label for="citationstring">Reference</label>
+                        <input class="form-control" type="text" name="citationstring" id="citationstring"\>
+                        <label for="citationurl">URL</label>
+                        <input class="form-control" type="text" name="citationurl" id="citationurl"\>
+                        <label for="citationabout">About this citation</label>
+                        <input class="form-control" type="text" name="citationabout" id="citationabout"/>
+                    </div>
+                </div>
+
+                <input type="submit" value="Submit" />
+
+
+    <!-- username = data['username'], projectname = data['projectname'] -->
+    
+            </form>
+        </div>
+    </div>
+    <script>
+    $(document).ready(function() {
+        $("input[name$='ispublished']").click(function() {
+            if ($(this).val() == "True") {
+                $("#citations").show();
+            }
+            else {
+                $("#citations").hide();
+            }
+                ;
+    });
+});
+</script>
+{% endblock %}
+
+{% block staticbody %}
+{% endblock %}
+<!-- ADD JQUERY TO CONVERT FORM DATA TO JSON -->

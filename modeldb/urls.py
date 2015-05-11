@@ -26,4 +26,5 @@ urlpatterns = patterns('',
     url(r'^evolution/$', views.evolution, name='evolution'),
     url(r'^edit/$', views.edit, name='edit'),
     url(r'^delete/$', views.delete, name='delete'),
+    url(r'^add/$', views.add_model, name='add_model'),
 )

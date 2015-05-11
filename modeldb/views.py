@@ -5,6 +5,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext #, loader
 from django.db.models import Q
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
+from django.contrib.auth.models import User
 #from django.views.decorators.csrf import ensure_csrf_cookie
 #@ensure_csrf_cookie
 
@@ -77,3 +78,16 @@ def delete(request):
     #link_data = simplejson.dumps(d)
     #return render(request, 'site/dashboard.html',{'models': models, "link_data": link_data},context_instance=RequestContext(request))
 
+def add_model(request):
+    if request.method == 'GET':
+        # Get all of the projects for the current user
+        projects = Project.objects.filter(owner=request.user)
+        return render(request, 'modeldb/add_model.html', {'projects': projects})
+    else:
+        '''
+        process the form
+        '''
+        '''
+        first, get all of the objects associated with the current user
+        '''
+        return HttpResponseRedirect('/dashboard/')
