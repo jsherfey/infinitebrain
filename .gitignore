@@ -6,6 +6,7 @@ media
 .metadata
 devdb
 infinitebrain/static/
+modeldb/static/
 lib
 build
 .idea
