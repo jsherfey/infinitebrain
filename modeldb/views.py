@@ -142,7 +142,7 @@ def add_model(request):
         if request.FILES['specfile'].size > int(settings.MAX_UPLOAD_SIZE) or request.FILES['readme'].size > int(settings.MAX_UPLOAD_SIZE):
             projects = Project.objects.filter(owner=request.user)
             tags = Tag.objects.all()[:5]
-            return render(request, 'modeldb/add_model.html', {'size_exceeded': True})
+            return render(request, 'modeldb/add_model.html', {'size_exceeded': True, 'projects': projects, 'tags': tags})
 
         owner = request.user;
         USER_MEDIA = 'user/' + owner.username + '/models/'
