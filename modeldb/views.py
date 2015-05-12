@@ -104,7 +104,7 @@ def add_model(request):
         model.save()
         model.tags.add(*tags)
         model.tags.add(*newtags)
-        model.readmefile=upload_and_save_readme(request, model)
+        model.readmefile=upload_readme(request, model)
         model.save()
         return model
 
@@ -119,7 +119,7 @@ def add_model(request):
         m = ModelSpec(model=model, file=rel_path,type=filetype)
         m.save()
 
-    def upload_and_save_readme(request, model):
+    def upload_readme(request, model):
         USER_MEDIA = 'user/' + request.user.username + '/models/'
         filename = request.FILES['readme']
         rel_path = USER_MEDIA + 'model' + str(model.pk) + '_readme.txt'
@@ -135,9 +135,6 @@ def add_model(request):
         tags = Tag.objects.all()[:5]
         return render(request, 'modeldb/add_model.html', {'projects': projects, 'tags': tags})
     else:
-        '''
-        First, locate the project
-        '''
         owner = request.user;
         USER_MEDIA = 'user/' + owner.username + '/models/'
         if not os.path.isdir(MEDIA_PATH + USER_MEDIA):
@@ -151,6 +148,7 @@ def add_model(request):
         project, created = Project.objects.get_or_create(owner=owner,name=projectname)
         if created:
             project.save()
+
         '''
         Then add the model and tags to the project
         '''
