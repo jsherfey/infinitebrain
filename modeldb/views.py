@@ -72,8 +72,8 @@ def delete(request):
     model.delete()
     # delete associated files and other objects (ModelRelation, Files...)
     # TODO: make model function that deletes all associated objects and files then itself    
-    #return HttpResponse(value)
-    return HttpResponseRedirect('/dashboard/')
+    return HttpResponse(200)
+    # return HttpResponseRedirect('/dashboard/')
     #return redirect('/dashboard/')
     #models = Model.objects.filter(user=request.user).order_by('-date_added')
     #links = ModelRelation.objects.filter(Q(target__user=request.user) | Q(source__user=request.user))

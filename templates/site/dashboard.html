@@ -108,7 +108,7 @@
                   <th>delete?</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody id="model_list">
               	{% for model in models %}
                 	<tr>
                   		<!-- <td><div class="object">{% vote_buttons_for model %}</div></td> -->
@@ -181,14 +181,15 @@
 			
 			// Delete model
 			$('button.delete').click(function(){
+              var currid = $(this).attr('id')
               $.ajax({
                 type:"POST",
                 url:"/models/delete/",
                 async: true,
                 dataType: "text",
-                data: {id: $(this).attr('id')},
-                success: function(result,status) {
-                    console.log(result);
+                data: {id: currid},
+                success: function(msg) {
+                    $("#"+currid).parent().parent().remove()
                 },
 				error: function(a,b,c) {
 					console.log('an error occurred');
