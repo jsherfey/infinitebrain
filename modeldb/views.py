@@ -83,6 +83,8 @@ def delete(request):
 
 @login_required
 def add_model(request):
+    MEDIA_PATH = '/project/infinitebrain/media/'
+    # MEDIA_PATH = '/Users/michaelromano/practice/'
 
     def save_model(request, owner, project):
         modelname = request.POST['name']
@@ -108,9 +110,6 @@ def add_model(request):
 
     def upload_and_save_spec(request, model, filetype):
         USER_MEDIA = 'user/' + request.user.username + '/models/'
-        MEDIA_PATH = '/project/infinitebrain/media/'
-        # # for practice:
-        # MEDIA_PATH = '/Users/michaelromano/practice/'
         filename = request.FILES['specfile']
         extension = filename.content_type.split('/')[1]
         rel_path = USER_MEDIA + 'model' + str(model.pk) + '_spec.' + extension
@@ -122,12 +121,9 @@ def add_model(request):
 
     def upload_and_save_readme(request, model):
         USER_MEDIA = 'user/' + request.user.username + '/models/'
-        MEDIA_PATH = '/project/infinitebrain/media/'
-        # MEDIA_PATH = '/Users/michaelromano/practice/'
         filename = request.FILES['readme']
         extension = filename.content_type.split('/')[1]
-        if not os.path.isdir(MEDIA_PATH + USER_MEDIA):
-            os.makedirs(MEDIA_PATH + USER_MEDIA)
+
         rel_path = USER_MEDIA + 'model' + str(model.pk) + '_readme.txt'
         with open(MEDIA_PATH+rel_path, 'wb') as writefile:
             for chunk in filename.chunks():
@@ -145,6 +141,10 @@ def add_model(request):
         First, locate the project
         '''
         owner = request.user;
+        USER_MEDIA = 'user/' + owner.username + '/models/'
+        if not os.path.isdir(MEDIA_PATH + USER_MEDIA):
+            os.makedirs(MEDIA_PATH + USER_MEDIA)
+
         if (request.POST['project'] == 'newproject' and request.POST['projectname'] != ''):
             projectname = request.POST['projectname']
         else:
@@ -156,7 +156,7 @@ def add_model(request):
         '''
         Then add the model and tags to the project
         '''
-        model = save_model(request,owner, project)
+        model = save_model(request, owner, project)
         upload_and_save_spec(request, model, request.POST.get('filetype'))
         
         '''
