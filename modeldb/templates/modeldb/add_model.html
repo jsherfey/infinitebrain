@@ -37,7 +37,7 @@
 
                 <div class="form-group">
                     {% for project in projects %}
-                    <input id="{{project}}" type="radio" name="project" value={{project}} />
+                    <input id="{{project}}" type="radio" name="project" value="{{project}}" />
                     <label for="{{project}}">{{project}}</label></br>
                     {% endfor %}
                     <input id="newproject" type="radio" name="project" value="newproject"/>
@@ -103,7 +103,7 @@
                 <h4>Tags</h4>
                 <div class="form-group">
                     {% for tag in tags %}
-                    <input type="checkbox" value= "{{tag.name}}" id="{{tag.name}}" name="tag[]" />
+                    <input type="checkbox" value="{{tag.name}}" id="{{tag.name}}" name="tag[]" />
                     <label for="{{tag.name}}">{{tag.name}}</label>
                     {% endfor %}
                     <div class="form-group">
