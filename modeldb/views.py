@@ -1,6 +1,7 @@
 from django.shortcuts import redirect, render, get_object_or_404, render_to_response
 from modeldb.models import Model, ModelSpec, ModelRelation, Project, Citation
 from django.utils import simplejson
+from django.conf import settings
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext #, loader
 from django.db.models import Q
@@ -83,7 +84,7 @@ def delete(request):
 
 @login_required
 def add_model(request):
-    MEDIA_PATH = '/project/infinitebrain/media/'
+    MEDIA_PATH = settings.MEDIA_ROOT
     # MEDIA_PATH = '/Users/michaelromano/practice/'
 
     def save_model(request, owner, project):
@@ -133,8 +134,16 @@ def add_model(request):
         # Get all of the projects for the current user
         projects = Project.objects.filter(owner=request.user)
         tags = Tag.objects.all()[:5]
-        return render(request, 'modeldb/add_model.html', {'projects': projects, 'tags': tags})
+        return render(request, 'modeldb/add_model.html', {'projects': projects, 'tags': tags, 'size_exceeded': False})
     else:
+        '''
+        First, check the file size
+        '''
+        if request.FILES['specfile'].size > int(settings.MAX_UPLOAD_SIZE) or request.FILES['readme'].size > int(settings.MAX_UPLOAD_SIZE):
+            projects = Project.objects.filter(owner=request.user)
+            tags = Tag.objects.all()[:5]
+            return render(request, 'modeldb/add_model.html', {'size_exceeded': True})
+
         owner = request.user;
         USER_MEDIA = 'user/' + owner.username + '/models/'
         if not os.path.isdir(MEDIA_PATH + USER_MEDIA):

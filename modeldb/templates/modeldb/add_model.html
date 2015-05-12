@@ -27,6 +27,9 @@
     </style>
 {% endblock %}
 {% block content %}
+    {% if size_exceeded %}
+      <div class="alert alert-danger text-center" role="alert">Maximum file size exceeded! Please keep files under 5MB each.</div>
+    {% endif %}
     <div class="container-fluid">
         <div class="col-md-6 col-md-offset-2">
             <h1 class="page-header">Please enter your model details:</h1>
