@@ -122,8 +122,6 @@ def add_model(request):
     def upload_and_save_readme(request, model):
         USER_MEDIA = 'user/' + request.user.username + '/models/'
         filename = request.FILES['readme']
-        extension = filename.content_type.split('/')[1]
-
         rel_path = USER_MEDIA + 'model' + str(model.pk) + '_readme.txt'
         with open(MEDIA_PATH+rel_path, 'wb') as writefile:
             for chunk in filename.chunks():
