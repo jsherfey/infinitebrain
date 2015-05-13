@@ -8,6 +8,7 @@ from django.utils import simplejson
 from django.db.models import Q
 from django.views.decorators.csrf import csrf_exempt
 from haystack.views import SearchView
+from django.core.urlresolvers import reverse
 
 
 # Create your views here.
@@ -44,6 +45,10 @@ def dashboard(request):
     link_data = simplejson.dumps(d)
     return render(request, 'site/dashboard.html',{'models': models, "link_data": link_data},context_instance=RequestContext(request))
 
+def download_model(request, relative_path):
+    print relative_path
+    return reverse('dashboard')
+
 
 class AuthenticatedSearchView(SearchView):
     def get_results(self):
@@ -55,4 +60,4 @@ class AuthenticatedSearchView(SearchView):
         else:
             results = results.filter(Q(user=None) | Q(privacy='public'));
         results = results.order_by('-date_added')
-        return results
+        return 

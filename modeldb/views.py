@@ -27,6 +27,7 @@ def index(request):
 
 def detail(request, model_id):
     model = get_object_or_404(Model, pk=model_id)
+    print model.readmefile
     return render(request, 'modeldb/detail.html',{'model':model})
     #try:
     #    model=Model.objects.get(pk=model_id)
@@ -162,7 +163,7 @@ def add_model(request):
         Then add the model and tags to the project
         '''
         model = save_model(request, owner, project)
-        upload_and_save_spec(request, model, request.POST.get('filetype'))
+        upload_and_save_spec(request, model, request.POST.get('filetype', 'dnsim'))
         
         '''
         Now, handle citations

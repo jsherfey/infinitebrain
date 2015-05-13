@@ -2,7 +2,7 @@ from django.conf.urls import patterns, include, url
 from django.contrib import admin
 from wiki.urls import get_pattern as get_wiki_pattern
 #from django_nyt.urls import get_pattern as get_nyt_pattern
-from django_notify.urls import get_pattern as get_nyt_pattern
+from django_nyt.urls import get_pattern as get_nyt_pattern
 import qhonuskan_votes.urls
 admin.autodiscover()
 import haystack
@@ -29,8 +29,8 @@ urlpatterns = patterns('',
     url(r'^notifications/', get_nyt_pattern()),
     url(r'^wiki/', get_wiki_pattern()),
     # url(r'^search/', include('haystack.urls')),
+    url(r'^media/(?P<relative_path>.*)$', 'infinitebrain.views.download_model')
 )
-
 # the following will 
 urlpatterns += patterns('haystack.views',
     url(r'^search/',AuthenticatedSearchView(
