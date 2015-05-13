@@ -33,7 +33,7 @@
 			{% if spec.type == "dsim-MATLAB" %}
 				<li><a class="btn btn-default" href="{{ MEDIA_URL }}{{ spec.file }}" role="button" style="color:blue">Download DNSim Model</a></li>
 			{% else %}
-				<!-- <li><a href="{{ MEDIA_URL }}{{ spec.file }}">{{spec.type}} specification</a></li> -->
+				<li><a href="{{ MEDIA_URL }}{{ spec.file }}">{{spec.type}} specification</a></li>
 			{% endif %}
 		{% endfor %}
 		{# <li><a href="{{ MEDIA_URL }}{{ model.d3file }}">d3 file</a></li> #}

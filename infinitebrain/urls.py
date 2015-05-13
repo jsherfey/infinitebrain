@@ -29,7 +29,7 @@ urlpatterns = patterns('',
     url(r'^notifications/', get_nyt_pattern()),
     url(r'^wiki/', get_wiki_pattern()),
     # url(r'^search/', include('haystack.urls')),
-    url(r'^media/(?P<relative_path>.*)$', 'infinitebrain.views.download_model')
+    url(r'^media/(?P<filename>.*)$', 'infinitebrain.views.download_model')
 )
 # the following will 
 urlpatterns += patterns('haystack.views',

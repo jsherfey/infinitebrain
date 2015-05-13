@@ -8,7 +8,9 @@ from django.utils import simplejson
 from django.db.models import Q
 from django.views.decorators.csrf import csrf_exempt
 from haystack.views import SearchView
-from django.core.urlresolvers import reverse
+from django.core.servers.basehttp import FileWrapper
+from django.conf import settings
+import mimetypes, re, os, tempfile, zipfile
 
 
 # Create your views here.
@@ -45,9 +47,19 @@ def dashboard(request):
     link_data = simplejson.dumps(d)
     return render(request, 'site/dashboard.html',{'models': models, "link_data": link_data},context_instance=RequestContext(request))
 
-def download_model(request, relative_path):
-    print relative_path
-    return reverse('dashboard')
+# much of the following method from
+# http://stackoverflow.com/questions/1930983/django-download-csv-file-using-a-link
+def download_model(request, filename):
+    filename = settings.MEDIA_ROOT + filename
+    pk = re.match(r'^.*model(?P<pk>\d+)_.*', filename).group('pk')
+    download_name = re.match(r'^.*(?P<download>model.*)$', filename).group('download')
+    wrapper = FileWrapper(file(filename))
+    content_type = mimetypes.guess_type(filename)[0]
+    response = HttpResponse(wrapper, content_type=content_type)
+    response['Content-Length']      = os.path.getsize(filename)    
+    response['Content-Disposition'] = "attachment; filename=%s"%download_name
+    # return redirect('/models/{0}'.format(pk))
+    return response
 
 
 class AuthenticatedSearchView(SearchView):
