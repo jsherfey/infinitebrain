@@ -1,5 +1,5 @@
-Django==1.6
-Python==2.7
+Django==1.6.2
+Python==2.7.5
 django-registration==1.0
 django-twitter-feed==0.2
 tweepy
