@@ -19,7 +19,7 @@ PROJECT_DIR = os.path.dirname(__file__)
 SECRET_KEY = '#bzf+3ho^kr2rnnc_1iooav_7ven)@4k(ku94z&0!1o4ner-s6'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False 
+DEBUG = True 
 
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
