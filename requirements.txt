@@ -11,6 +11,6 @@ django-notify==1.1.2
 django-mptt==0.6.1
 sorl-thumbnail==11.12.1b
 django-sekizai==0.7
-wiki==1.1dev
+wiki==0.0.24.2
 django-haystack
 whoosh==2.5.7
