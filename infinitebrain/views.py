@@ -72,4 +72,4 @@ class AuthenticatedSearchView(SearchView):
         else:
             results = results.filter(Q(user=None) | Q(privacy='public'));
         results = results.order_by('-date_added')
-        return 
+        return results
