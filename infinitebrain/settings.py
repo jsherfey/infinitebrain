@@ -53,7 +53,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 #    'django.core.context_processors.debug',
 #)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
