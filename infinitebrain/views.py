@@ -53,6 +53,7 @@ def download_model(request, filename):
     filename = settings.MEDIA_ROOT + filename
     pk = re.match(r'^.*model(?P<pk>\d+)_.*', filename).group('pk')
     download_name = re.match(r'^.*(?P<download>model.*)$', filename).group('download')
+    print(download_name)
     wrapper = FileWrapper(file(filename))
     content_type = mimetypes.guess_type(filename)[0]
     response = HttpResponse(wrapper, content_type=content_type)

@@ -9,6 +9,8 @@ from django.views.decorators.csrf import csrf_exempt, csrf_protect
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from taggit.models import Tag
+import re
+
 import os
 #from django.views.decorators.csrf import ensure_csrf_cookie
 #@ensure_csrf_cookie
@@ -113,8 +115,9 @@ def add_model(request):
     def upload_and_save_spec(request, model, filetype):
         USER_MEDIA = 'user/' + request.user.username + '/models/'
         filename = request.FILES['specfile']
-        extension = filename.content_type.split('/')[1]
-        rel_path = USER_MEDIA + 'model' + str(model.pk) + '_spec.' + extension
+        fn = str(filename)
+        extension = re.search('\w+$',fn)
+        rel_path = USER_MEDIA + 'model' + str(model.pk) + '_spec.' + extension.group(0)
         with open(MEDIA_PATH+rel_path, 'wb') as writefile:
             for chunk in filename.chunks():
                 writefile.write(chunk)
