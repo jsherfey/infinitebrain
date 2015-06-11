@@ -1,0 +1,185 @@
+Model Description
+----------------------------------
+Populations:
+E1     (n=20):
+	dynamics: V' = (((-E1_cat_ica(E1_V,E1_cadyn_cai,E1_cat_m,E1_cat_h))+((-E1_can_ica(E1_V,E1_cadyn_cai,E1_can_m,E1_can_h))+((-E1_kdr_ik(E1_V,E1_kdr_n))+((-E1_h_ih(E1_V,E1_h_n))+((-E1_kca_ik(E1_V,E1_kca_m))+((-E1_naf_ina(E1_V,E1_naf_m,E1_naf_h))+((-E1_pas_leak(E1_V))+((E1_randn_noisefunc(t))+((-E1_E1_AMPA_ISYN(E1_V,E1_E1_AMPA_s))+((-E1_E1_NMDA_INMDA(E1_V,E1_E1_NMDA_sNMDApre))+((-I_E1_GABAa_ISYN(E1_V,I_E1_GABAa_s))+0))))))))))))./(1)
+	dynamics: cai' = max(0,-(10000)*((E1_cat_ica(E1_V,E1_cadyn_cai,E1_cat_m,E1_cat_h))+((E1_can_ica(E1_V,E1_cadyn_cai,E1_can_m,E1_can_h))+0))/(2*(96520)*(0.1)))/18+(E1_cadyn_cainf-E1_cadyn_cai)/(10);
+	mechanisms: cadyn, cat, can, kdr, h, kca, naf, pas, randn
+	parameters: Cm=1, V_IC=-70, mode=105, ncreasing=, isi=100, tshift=0.1, offset=Inf, wavetype=115, in=
+I      (n=5):
+	dynamics: V' = (((-I_FSs_kdr_ik(I_V,I_FSs_kdr_n))+((-I_FSs_naf_ina(I_V,I_FSs_naf_m,I_FSs_naf_h))+((-I_FSs_iks_ik(I_V,I_FSs_iks_a,I_FSs_iks_b))+((-I_FSs_pas_leak(I_V))+((I_randn_noisefunc(t))+((-E1_I_AMPA_ISYN(I_V,E1_I_AMPA_s))+((-I_I_GABAa_ISYN(I_V,I_I_GABAa_s))+0))))))))./(1.2)
+	mechanisms: FSs_kdr, FSs_naf, FSs_iks, FSs_pas, randn
+	parameters: V_IC=-65, Cm=1.2, mode=105, ncreasing=, isi=100, tshift=0.1, offset=Inf, wavetype=115, in=
+
+Connections:
+          	E1        	I         	
+E1        	AMPANMDA  	AMPA      	
+I         	GABAa     	GABAa     	
+
+Connection parameters:
+E1->E1: 
+	parameters: NtauR=1e-05, span=Inf
+I->E1: 
+	parameters: span=Inf
+E1->I: 
+	parameters: span=Inf
+I->I: 
+	parameters: span=Inf
+
+Model Equations:
+----------------------------------
+ODEs:
+	E1_V'                = (((-E1_cat_ica(E1_V,E1_cadyn_cai,E1_cat_m,E1_cat_h))+((-E1_can_ica(E1_V,E1_cadyn_cai,E1_can_m,E1_can_h))+((-E1_kdr_ik(E1_V,E1_kdr_n))+((-E1_h_ih(E1_V,E1_h_n))+((-E1_kca_ik(E1_V,E1_kca_m))+((-E1_naf_ina(E1_V,E1_naf_m,E1_naf_h))+((-E1_pas_leak(E1_V))+((E1_randn_noisefunc(t))+((-E1_E1_AMPA_ISYN(E1_V,E1_E1_AMPA_s))+((-E1_E1_NMDA_INMDA(E1_V,E1_E1_NMDA_sNMDApre))+((-I_E1_GABAa_ISYN(E1_V,I_E1_GABAa_s))+0))))))))))))./(1)
+	E1_cadyn_cai'        = max(0,-(10000)*((E1_cat_ica(E1_V,E1_cadyn_cai,E1_cat_m,E1_cat_h))+((E1_can_ica(E1_V,E1_cadyn_cai,E1_can_m,E1_can_h))+0))/(2*(96520)*(0.1)))/18+(E1_cadyn_cainf-E1_cadyn_cai)/(10);
+	E1_cat_m'            = (E1_cat_minf(E1_V)-E1_cat_m)./(3.5);
+	E1_cat_h'            = (E1_cat_hinf(E1_V)-E1_cat_h)./(10);
+	E1_can_m'            = (E1_can_minf(E1_V)-E1_can_m)./(3.5);
+	E1_can_h'            = (E1_can_hinf(E1_V)-E1_can_h)./(75);
+	E1_kdr_n'            = (E1_kdr_ninf(E1_V)-E1_kdr_n)./E1_kdr_taun(E1_V);
+	E1_h_n'              = (E1_h_ninf(E1_V)-E1_h_n)./E1_h_taun(E1_V);
+	E1_kca_m'            = (E1_kca_minf(E1_cadyn_cai)-E1_kca_m)./E1_kca_taum(E1_cadyn_cai);
+	E1_naf_m'            = (E1_naf_minf(E1_V)-E1_naf_m)./E1_naf_taum(E1_V);
+	E1_naf_h'            = (E1_naf_hinf(E1_V)-E1_naf_h)./E1_naf_tauh(E1_V);
+	E1_E1_AMPA_s'        = -E1_E1_AMPA_s./(2) + ((1-E1_E1_AMPA_s)/(0.083)).*(1+tanh(E1_V*(0.1)));
+	E1_E1_NMDA_sNMDApre' = E1_E1_NMDA_NT(E1_V).*(1-E1_E1_NMDA_sNMDApre)/(1e-05)-E1_E1_NMDA_sNMDApre/(150);
+	I_E1_GABAa_s'        = -I_E1_GABAa_s./(5) + ((1-I_E1_GABAa_s)/(0.083)).*(1+tanh(I_V*(0.1)));
+	I_V'                 = (((-I_FSs_kdr_ik(I_V,I_FSs_kdr_n))+((-I_FSs_naf_ina(I_V,I_FSs_naf_m,I_FSs_naf_h))+((-I_FSs_iks_ik(I_V,I_FSs_iks_a,I_FSs_iks_b))+((-I_FSs_pas_leak(I_V))+((I_randn_noisefunc(t))+((-E1_I_AMPA_ISYN(I_V,E1_I_AMPA_s))+((-I_I_GABAa_ISYN(I_V,I_I_GABAa_s))+0))))))))./(1.2)
+	I_FSs_kdr_n'         = (I_FSs_kdr_ninf(I_V)-I_FSs_kdr_n)./I_FSs_kdr_taun(I_V);
+	I_FSs_naf_m'         = (I_FSs_naf_minf(I_V)-I_FSs_naf_m)./I_FSs_naf_taum(I_V);
+	I_FSs_naf_h'         = (I_FSs_naf_hinf(I_V)-I_FSs_naf_h)./I_FSs_naf_tauh(I_V);
+	I_FSs_iks_a'         = (I_FSs_iks_ainf(I_V)-I_FSs_iks_a)./(10);
+	I_FSs_iks_b'         = (I_FSs_iks_binf(I_V)-I_FSs_iks_b)./I_FSs_iks_btau(I_V);
+	E1_I_AMPA_s'         = -E1_I_AMPA_s./(2) + ((1-E1_I_AMPA_s)/(0.083)).*(1+tanh(E1_V*(0.1)));
+	I_I_GABAa_s'         = -I_I_GABAa_s./(5) + ((1-I_I_GABAa_s)/(0.083)).*(1+tanh(I_V*(0.1)));
+
+Initial Conditions:
+	E1_V(0)             =[-70, -70, -70, -70, -70, -70, -70, -70, -70, -70, -70, -70, -70, -70, -70, -70, -70, -70, -70, -70, ]
+	E1_cadyn_cai(0)     =[5e-05, 5e-05, 5e-05, 5e-05, 5e-05, 5e-05, 5e-05, 5e-05, 5e-05, 5e-05, 5e-05, 5e-05, 5e-05, 5e-05, 5e-05, 5e-05, 5e-05, 5e-05, 5e-05, 5e-05, ]
+	E1_cat_m(0)         =[0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, ]
+	E1_cat_h(0)         =[0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, ]
+	E1_can_m(0)         =[0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, ]
+	E1_can_h(0)         =[0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, ]
+	E1_kdr_n(0)         =[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ]
+	E1_h_n(0)           =[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ]
+	E1_kca_m(0)         =[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ]
+	E1_naf_m(0)         =[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ]
+	E1_naf_h(0)         =[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, ]
+	E1_E1_AMPA_s(0)     =[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ]
+	E1_E1_NMDA_sNMDApre(0)=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ]
+	I_E1_GABAa_s(0)     =[0.1, 0.1, 0.1, 0.1, 0.1, ]
+	I_V(0)              =[-65, -65, -65, -65, -65, ]
+	I_FSs_kdr_n(0)      =[0, 0, 0, 0, 0, ]
+	I_FSs_naf_m(0)      =[0, 0, 0, 0, 0, ]
+	I_FSs_naf_h(0)      =[1, 1, 1, 1, 1, ]
+	I_FSs_iks_a(0)      =[0, 0, 0, 0, 0, ]
+	I_FSs_iks_b(0)      =[1, 1, 1, 1, 1, ]
+	E1_I_AMPA_s(0)      =[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ]
+	I_I_GABAa_s(0)      =[0.1, 0.1, 0.1, 0.1, 0.1, ]
+
+
+Matlab-formatted (copy and paste to repeat simulation):
+%-----------------------------------------------------------
+% Auxiliary variables:
+	E1_cadyn_cainf       = [5e-05];
+	E1_E1_AMPA_span      = [inf];
+	E1_E1_AMPA_netcon    = WeightGenerator((20),(20),(1),(Inf),(1),(0),(1));
+	E1_E1_NMDA_NtauR     = 1/(7.2E4);
+	E1_E1_NMDA_span      = [inf];
+	E1_E1_NMDA_netcon    = WeightGenerator((20),(20),(1),(Inf),(1),(0),(1));
+	I_E1_GABAa_span      = [inf];
+	I_E1_GABAa_netcon    = WeightGenerator((5),(20),(1),(Inf),(1),(0),(1));
+	E1_I_AMPA_span       = [inf];
+	E1_I_AMPA_netcon     = WeightGenerator((20),(5),(1),(Inf),(1),(0),(1));
+	I_I_GABAa_span       = [inf];
+	I_I_GABAa_netcon     = WeightGenerator((5),(5),(1),(Inf),(1),(0),(1));
+
+% Anonymous functions:
+	E1_cat_alpm          = @(v) exp(1e-3*(-3)*(v-(-37.5))*9.648e4/(8.315*(273.16+(34))));
+	E1_cat_alph          = @(v) exp(1e-3*(5.2)*(v-(-72.5))*9.648e4/(8.315*(273.16+(34))));
+	E1_cat_minf          = @(v) 1./(1+E1_cat_alpm(v));             
+	E1_cat_hinf          = @(v) 1./(1+E1_cat_alph(v));             
+	E1_cat_ica           = @(v,E1_cadyn_cai,E1_cat_m,E1_cat_h) (0.00175)*E1_cat_m.^2.*E1_cat_h.*(v-(126.1));
+	E1_can_alpm          = @(v) exp(1e-3*(-3.4)*(v-(-22.5))*9.648e4/(8.315*(273.16+(34))));
+	E1_can_alph          = @(v) exp(1e-3*(2)*(v-(-38.5))*9.648e4/(8.315*(273.16+(34))));
+	E1_can_minf          = @(v) 1./(1+E1_can_alpm(v));             
+	E1_can_hinf          = @(v) 1./(1+E1_can_alph(v));             
+	E1_can_h2            = @(E1_cadyn_cai) (0.025)./((0.025)+E1_cadyn_cai);
+	E1_can_ica           = @(v,E1_cadyn_cai,E1_can_m,E1_can_h) (0.0056)*E1_can_m.^2.*E1_can_h.*E1_can_h2(E1_cadyn_cai).*(v-(126.1));
+	E1_kdr_aoff          = @(v) (abs(v-13)<1e-4).*(1e-4)+(abs(v-13)>=1e-4).*0;
+	E1_kdr_alf           = @(v) (1)*((-0.018*(v-13+E1_kdr_aoff(v)))./(-1+exp(-((v-13+E1_kdr_aoff(v))/25))));
+	E1_kdr_boff          = @(v) (abs(v-23)<1e-4).*(1e-4)+(abs(v-23)>=1e-4).*0;
+	E1_kdr_bet           = @(v) (1)*((0.0054*(v-23+E1_kdr_boff(v)))./(-1+exp((v-23+E1_kdr_boff(v))/12)));
+	E1_kdr_ninf          = @(v) E1_kdr_alf(v)./(E1_kdr_alf(v)+E1_kdr_bet(v));
+	E1_kdr_taun          = @(v) (1)*1./(E1_kdr_alf(v)+E1_kdr_bet(v));
+	E1_kdr_ik            = @(v,E1_kdr_n) (4).*E1_kdr_n.^4.*(v-(-80));
+	E1_h_ninf            = @(v) 1-(1./(1+exp(((-90)-v)/(10))));    
+	E1_h_taun            = @(v) (v>-10).*(1) + (v<-10).*(2*(1./(exp((v+145)/-17.5)+exp((v+16.8)/16.5))+10));
+	E1_h_ih              = @(v,E1_h_n) (0.01)*E1_h_n.*(v-(-10));   
+	E1_kca_minf          = @(E1_cadyn_cai) (E1_cadyn_cai/(0.008))./((E1_cadyn_cai/(0.008))+1);
+	E1_kca_taum          = @(E1_cadyn_cai) (1)+(0.008)./(E1_cadyn_cai+(0.008));
+	E1_kca_ik            = @(v,E1_kca_m) (4.5).*E1_kca_m.^2.*(v-(-80));
+	E1_naf_mao           = @(v) (abs(v+28)<1e-4).*(1e-4)+(abs(v+28)>=1e-4).*0;
+	E1_naf_malf          = @(v) (1)*(-0.2816*(v+28+E1_naf_mao(v))./(-1+exp(-(v+28+E1_naf_mao(v))/9.3)));
+	E1_naf_mbo           = @(v) (abs(v+1)<1e-4).*(1e-4)+(abs(v+1)>=1e-4).*0;
+	E1_naf_mbet          = @(v) (1)*0.2464*(v+1+E1_naf_mbo(v))./(-1+exp((v+1+E1_naf_mbo(v))/6));
+	E1_naf_hao           = @(v) (abs(v+43.1)<1e-4).*(1e-4)+(abs(v+43.1)>=1e-4).*0;
+	E1_naf_half          = @(v) (1)*.098./exp((v+23.1+E1_naf_hao(v))/20);
+	E1_naf_hbo           = @(v) (abs(v+13.1)<1e-4).*(1e-4)+(abs(v+13.1)>=1e-4).*0;
+	E1_naf_hbet          = @(v) (1)*1.4./(1+exp(-(v+25.1+E1_naf_hbo(v))/10));
+	E1_naf_minf          = @(v) E1_naf_malf(v)./(E1_naf_malf(v)+E1_naf_mbet(v));
+	E1_naf_taum          = @(v) (1)*1./(E1_naf_malf(v)+E1_naf_mbet(v));
+	E1_naf_hinf          = @(v) E1_naf_half(v)./(E1_naf_half(v)+E1_naf_hbet(v));
+	E1_naf_tauh          = @(v) (1)*1./(E1_naf_half(v)+E1_naf_hbet(v));
+	E1_naf_ina           = @(v,E1_naf_m,E1_naf_h) (50.25).*E1_naf_m.^3.*E1_naf_h.*(v-(55));
+	E1_pas_leak          = @(IN) (0.04).*(IN-(-70));               
+	E1_randn_noisefunc   = @(t) (0).*randn((20),1).*sqrt((0.01))/(0.01);
+	E1_E1_AMPA_ISYN      = @(E1_V,E1_E1_AMPA_s) ((0).*((E1_E1_AMPA_netcon.*(1))*E1_E1_AMPA_s).*(E1_V-(0)));
+	E1_E1_NMDA_BMg       = @(E1_V) 1./(1+exp(-.062*E1_V)*(1.5)/3.57);
+	E1_E1_NMDA_NT        = @(E1_V) (0.001)./(1+exp(-(E1_V-(2))/(5)));
+	E1_E1_NMDA_INMDA     = @(E1_V,s) (0).*E1_E1_NMDA_BMg(E1_V).*((E1_E1_NMDA_netcon.*(1))*s).*(E1_V-(0));
+	I_E1_GABAa_ISYN      = @(E1_V,I_E1_GABAa_s) ((0.25).*((I_E1_GABAa_netcon.*(1))*I_E1_GABAa_s).*(E1_V-(-80)));
+	I_FSs_kdr_aoff       = @(v) (abs(v-13)<1e-4).*(1e-4)+(abs(v-13)>=1e-4).*0;
+	I_FSs_kdr_alf        = @(v) ((-0.018*(v-13+I_FSs_kdr_aoff(v)))./(-1+exp(-((v-13+I_FSs_kdr_aoff(v))/25))));
+	I_FSs_kdr_boff       = @(v) (abs(v-23)<1e-4).*(1e-4)+(abs(v-23)>=1e-4).*0;
+	I_FSs_kdr_bet        = @(v) ((0.0054*(v-23+I_FSs_kdr_boff(v)))./(-1+exp((v-23+I_FSs_kdr_boff(v))/12)));
+	I_FSs_kdr_ninf       = @(v) I_FSs_kdr_alf(v)./(I_FSs_kdr_alf(v)+I_FSs_kdr_bet(v));
+	I_FSs_kdr_taun       = @(v) 1./(I_FSs_kdr_alf(v)+I_FSs_kdr_bet(v));
+	I_FSs_kdr_ik         = @(v,I_FSs_kdr_n) (5).*I_FSs_kdr_n.^4.*(v-(-80));
+	I_FSs_naf_mao        = @(v) (abs(v+28)<1e-4).*(1e-4)+(abs(v+28)>=1e-4).*0;
+	I_FSs_naf_malf       = @(v) -0.2816*(v+28+I_FSs_naf_mao(v))./(-1+exp(-(v+28+I_FSs_naf_mao(v))/9.3));
+	I_FSs_naf_mbo        = @(v) (abs(v+1)<1e-4).*(1e-4)+(abs(v+1)>=1e-4).*0;
+	I_FSs_naf_mbet       = @(v) 0.2464*(v+1+I_FSs_naf_mbo(v))./(-1+exp((v+1+I_FSs_naf_mbo(v))/6));
+	I_FSs_naf_hao        = @(v) (abs(v+43.1)<1e-4).*(1e-4)+(abs(v+43.1)>=1e-4).*0;
+	I_FSs_naf_half       = @(v) 0.098./exp((v+23.1+I_FSs_naf_hao(v))/20);
+	I_FSs_naf_hbo        = @(v) (abs(v+13.1)<1e-4).*(1e-4)+(abs(v+13.1)>=1e-4).*0;
+	I_FSs_naf_hbet       = @(v) 1.4./(1+exp(-(v+25.1+I_FSs_naf_hbo(v))/10));
+	I_FSs_naf_minf       = @(v) I_FSs_naf_malf(v)./(I_FSs_naf_malf(v)+I_FSs_naf_mbet(v));
+	I_FSs_naf_taum       = @(v) 1./(I_FSs_naf_malf(v)+I_FSs_naf_mbet(v));
+	I_FSs_naf_hinf       = @(v) I_FSs_naf_half(v)./(I_FSs_naf_half(v)+I_FSs_naf_hbet(v));
+	I_FSs_naf_tauh       = @(v) 1./(I_FSs_naf_half(v)+I_FSs_naf_hbet(v));
+	I_FSs_naf_ina        = @(v,I_FSs_naf_m,I_FSs_naf_h) (62.5).*I_FSs_naf_m.^3.*I_FSs_naf_h.*(v-(55));
+	I_FSs_iks_va         = @(v) v+34;                              
+	I_FSs_iks_va2        = @(v) (abs(I_FSs_iks_va(v))<1e-4).*(I_FSs_iks_va(v)+1e-4)+(abs(I_FSs_iks_va(v))>=1e-4).*(I_FSs_iks_va(v));
+	I_FSs_iks_vb         = @(v) v+65;                              
+	I_FSs_iks_vb2        = @(v) (abs(I_FSs_iks_vb(v))<1e-4).*(I_FSs_iks_vb(v)+1e-4)+(abs(I_FSs_iks_vb(v))>=1e-4).*(I_FSs_iks_vb(v));
+	I_FSs_iks_vd         = @(v) v+63.6;                            
+	I_FSs_iks_vd2        = @(v) (abs(I_FSs_iks_vd(v))<1e-4).*(I_FSs_iks_vd(v)+1e-4)+(abs(I_FSs_iks_vd(v))>=1e-4).*(I_FSs_iks_vd(v));
+	I_FSs_iks_ainf       = @(v) 1./(1+exp(-I_FSs_iks_va2(v)/6.5)); 
+	I_FSs_iks_binf       = @(v) 1./(1+exp(I_FSs_iks_vb2(v)/6.6));  
+	I_FSs_iks_btau       = @(v) (200)+(3200)./(1+exp(-I_FSs_iks_vd2(v)/4));
+	I_FSs_iks_ik         = @(v,I_FSs_iks_a,I_FSs_iks_b) (0.0201).*I_FSs_iks_a.*I_FSs_iks_b.*(v-(-80));
+	I_FSs_pas_leak       = @(IN) (0.019).*(IN-(-70));              
+	I_randn_noisefunc    = @(t) (0).*randn((5),1).*sqrt((0.01))/(0.01);
+	E1_I_AMPA_ISYN       = @(I_V,E1_I_AMPA_s) ((1).*((E1_I_AMPA_netcon.*(1))*E1_I_AMPA_s).*(I_V-(0)));
+	I_I_GABAa_ISYN       = @(I_V,I_I_GABAa_s) ((0.5).*((I_I_GABAa_netcon.*(1))*I_I_GABAa_s).*(I_V-(-80)));
+
+% ODE Handle, ICs, integration, and plotting:
+ODEFUN = @(t,X) [(((-E1_cat_ica(X(1:20),X(21:40),X(41:60),X(61:80)))+((-E1_can_ica(X(1:20),X(21:40),X(81:100),X(101:120)))+((-E1_kdr_ik(X(1:20),X(121:140)))+((-E1_h_ih(X(1:20),X(141:160)))+((-E1_kca_ik(X(1:20),X(161:180)))+((-E1_naf_ina(X(1:20),X(181:200),X(201:220)))+((-E1_pas_leak(X(1:20)))+((E1_randn_noisefunc(t))+((-E1_E1_AMPA_ISYN(X(1:20),X(221:240)))+((-E1_E1_NMDA_INMDA(X(1:20),X(241:260)))+((-I_E1_GABAa_ISYN(X(1:20),X(261:265)))+0))))))))))))./(1);max(0,-(10000)*((E1_cat_ica(X(1:20),X(21:40),X(41:60),X(61:80)))+((E1_can_ica(X(1:20),X(21:40),X(81:100),X(101:120)))+0))/(2*(96520)*(0.1)))/18+(E1_cadyn_cainf-X(21:40))/(10);(E1_cat_minf(X(1:20))-X(41:60))./(3.5);(E1_cat_hinf(X(1:20))-X(61:80))./(10);(E1_can_minf(X(1:20))-X(81:100))./(3.5);(E1_can_hinf(X(1:20))-X(101:120))./(75);(E1_kdr_ninf(X(1:20))-X(121:140))./E1_kdr_taun(X(1:20));(E1_h_ninf(X(1:20))-X(141:160))./E1_h_taun(X(1:20));(E1_kca_minf(X(21:40))-X(161:180))./E1_kca_taum(X(21:40));(E1_naf_minf(X(1:20))-X(181:200))./E1_naf_taum(X(1:20));(E1_naf_hinf(X(1:20))-X(201:220))./E1_naf_tauh(X(1:20));-X(221:240)./(2) + ((1-X(221:240))/(0.083)).*(1+tanh(X(1:20)*(0.1)));E1_E1_NMDA_NT(X(1:20)).*(1-X(241:260))/(1e-05)-X(241:260)/(150);-X(261:265)./(5) + ((1-X(261:265))/(0.083)).*(1+tanh(X(266:270)*(0.1)));(((-I_FSs_kdr_ik(X(266:270),X(271:275)))+((-I_FSs_naf_ina(X(266:270),X(276:280),X(281:285)))+((-I_FSs_iks_ik(X(266:270),X(286:290),X(291:295)))+((-I_FSs_pas_leak(X(266:270)))+((I_randn_noisefunc(t))+((-E1_I_AMPA_ISYN(X(266:270),X(296:315)))+((-I_I_GABAa_ISYN(X(266:270),X(316:320)))+0))))))))./(1.2);(I_FSs_kdr_ninf(X(266:270))-X(271:275))./I_FSs_kdr_taun(X(266:270));(I_FSs_naf_minf(X(266:270))-X(276:280))./I_FSs_naf_taum(X(266:270));(I_FSs_naf_hinf(X(266:270))-X(281:285))./I_FSs_naf_tauh(X(266:270));(I_FSs_iks_ainf(X(266:270))-X(286:290))./(10);(I_FSs_iks_binf(X(266:270))-X(291:295))./I_FSs_iks_btau(X(266:270));-X(296:315)./(2) + ((1-X(296:315))/(0.083)).*(1+tanh(X(1:20)*(0.1)));-X(316:320)./(5) + ((1-X(316:320))/(0.083)).*(1+tanh(X(266:270)*(0.1)));];
+IC = [-70          -70          -70          -70          -70          -70          -70          -70          -70          -70          -70          -70          -70          -70          -70          -70          -70          -70          -70          -70        5e-05        5e-05        5e-05        5e-05        5e-05        5e-05        5e-05        5e-05        5e-05        5e-05        5e-05        5e-05        5e-05        5e-05        5e-05        5e-05        5e-05        5e-05        5e-05        5e-05          0.1          0.1          0.1          0.1          0.1          0.1          0.1          0.1          0.1          0.1          0.1          0.1          0.1          0.1          0.1          0.1          0.1          0.1          0.1          0.1          0.9          0.9          0.9          0.9          0.9          0.9          0.9          0.9          0.9          0.9          0.9          0.9          0.9          0.9          0.9          0.9          0.9          0.9          0.9          0.9          0.1          0.1          0.1          0.1          0.1          0.1          0.1          0.1          0.1          0.1          0.1          0.1          0.1          0.1          0.1          0.1          0.1          0.1          0.1          0.1          0.9          0.9          0.9          0.9          0.9          0.9          0.9          0.9          0.9          0.9          0.9          0.9          0.9          0.9          0.9          0.9          0.9          0.9          0.9          0.9            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            1            1            1            1            1            1            1            1            1            1            1            1            1            1            1            1            1            1            1            1            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0          0.1          0.1          0.1          0.1          0.1          -65          -65          -65          -65          -65            0            0            0            0            0            0            0            0            0            0            1            1            1            1            1            0            0            0            0            0            1            1            1            1            1            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0            0          0.1          0.1          0.1          0.1          0.1];
+
+[t,y]=ode23(ODEFUN,[0 100],IC);   % numerical integration
+figure; plot(t,y);           % plot all variables/functions
+try legend('E1\_V','E1\_cadyn\_cai','E1\_cat\_m','E1\_cat\_h','E1\_can\_m','E1\_can\_h','E1\_kdr\_n','E1\_h\_n','E1\_kca\_m','E1\_naf\_m','E1\_naf\_h','E1\_E1\_AMPA\_s','E1\_E1\_NMDA\_sNMDApre','I\_E1\_GABAa\_s','I\_V','I\_FSs\_kdr\_n','I\_FSs\_naf\_m','I\_FSs\_naf\_h','I\_FSs\_iks\_a','I\_FSs\_iks\_b','E1\_I\_AMPA\_s','I\_I\_GABAa\_s'); end
+%-----------------------------------------------------------
+
+

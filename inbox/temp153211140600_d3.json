@@ -1,0 +1,116 @@
+[
+	{
+		"source": "cadyn",
+		"target": "E1",
+		"type": "intrinsic",
+		"label": "cadyn"
+	},
+	{
+		"source": "cat",
+		"target": "E1",
+		"type": "intrinsic",
+		"label": "cat"
+	},
+	{
+		"source": "can",
+		"target": "E1",
+		"type": "intrinsic",
+		"label": "can"
+	},
+	{
+		"source": "kdr",
+		"target": "E1",
+		"type": "intrinsic",
+		"label": "kdr"
+	},
+	{
+		"source": "h",
+		"target": "E1",
+		"type": "intrinsic",
+		"label": "h"
+	},
+	{
+		"source": "kca",
+		"target": "E1",
+		"type": "intrinsic",
+		"label": "kca"
+	},
+	{
+		"source": "naf",
+		"target": "E1",
+		"type": "intrinsic",
+		"label": "naf"
+	},
+	{
+		"source": "pas",
+		"target": "E1",
+		"type": "intrinsic",
+		"label": "pas"
+	},
+	{
+		"source": "randn",
+		"target": "E1",
+		"type": "intrinsic",
+		"label": "randn"
+	},
+	{
+		"source": "FSs_kdr",
+		"target": "I",
+		"type": "intrinsic",
+		"label": "FSs_kdr"
+	},
+	{
+		"source": "FSs_naf",
+		"target": "I",
+		"type": "intrinsic",
+		"label": "FSs_naf"
+	},
+	{
+		"source": "FSs_iks",
+		"target": "I",
+		"type": "intrinsic",
+		"label": "FSs_iks"
+	},
+	{
+		"source": "FSs_pas",
+		"target": "I",
+		"type": "intrinsic",
+		"label": "FSs_pas"
+	},
+	{
+		"source": "randn",
+		"target": "I",
+		"type": "intrinsic",
+		"label": "randn"
+	},
+	{
+		"source": "E1",
+		"target": "E1",
+		"type": "connection",
+		"label": "AMPA"
+	},
+	{
+		"source": "E1",
+		"target": "E1",
+		"type": "connection",
+		"label": "NMDA"
+	},
+	{
+		"source": "E1",
+		"target": "I",
+		"type": "connection",
+		"label": "AMPA"
+	},
+	{
+		"source": "I",
+		"target": "E1",
+		"type": "connection",
+		"label": "GABAa"
+	},
+	{
+		"source": "I",
+		"target": "I",
+		"type": "connection",
+		"label": "GABAa"
+	}
+]
