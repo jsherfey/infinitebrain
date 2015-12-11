@@ -176,10 +176,17 @@ EMAIL_SUBJECT_PREFIX='[infinitebrain]'
 # dummy server: sudo python -m smtpd -n -c DebuggingServer localhost:1025
 
 # Twitter settings
-TWITTER_FEED_CONSUMER_PUBLIC_KEY = 'tWllmoyOjOi3T9ujUk7lH0M32'
-TWITTER_FEED_CONSUMER_SECRET = '22T6k9UfXZ4op4Zw0JwHi2WHRHF2tgzlfYOHfjFPrIy4kmY0I4'
-TWITTER_FEED_OPEN_AUTH_TOKEN = '2270834493-IcR5CNhh9YDpcpUM8KUGqylI6FokHbASdd9QCoa'
-TWITTER_FEED_OPEN_AUTH_SECRET = 'lC9mi67oTzN0bIDmhhbx36JiqcZM4OPvuAPhjSMpG3mWh'
+# settings for @infbrain (jason_sherfey, jssherfey@gmail.com):
+TWITTER_FEED_CONSUMER_PUBLIC_KEY = 'eLsEjizrCeDgXjnECO2W7n3cW'
+TWITTER_FEED_CONSUMER_SECRET = 'TiXOSjVg8SE95Q1k49G9EMI2wWQcEqAWK6H99xuMcBl1RuzykS'
+TWITTER_FEED_OPEN_AUTH_TOKEN = '66367399-kOOIF8YgmQLtsS53fjTNVqPZB1wlHKcM5zUxhnIHB'
+TWITTER_FEED_OPEN_AUTH_SECRET = 'HyEUBa9WfckoOJs6Tih7MTxwUepSpA6seXzpC0hh2mlZt'
+# settings for @jasonsherfey (sherfey@bu.edu):
+#TWITTER_FEED_CONSUMER_PUBLIC_KEY = 'tWllmoyOjOi3T9ujUk7lH0M32'
+#TWITTER_FEED_CONSUMER_SECRET = '22T6k9UfXZ4op4Zw0JwHi2WHRHF2tgzlfYOHfjFPrIy4kmY0I4'
+#TWITTER_FEED_OPEN_AUTH_TOKEN = '2270834493-IcR5CNhh9YDpcpUM8KUGqylI6FokHbASdd9QCoa'
+#TWITTER_FEED_OPEN_AUTH_SECRET = 'lC9mi67oTzN0bIDmhhbx36JiqcZM4OPvuAPhjSMpG3mWh'
+# how to get API keys/tokens: https://twittercommunity.com/t/how-to-get-my-api-key/7033
 
 # HAYSTACK settings. Path is the location of the whoosh index.
 HAYSTACK_CONNECTIONS = {
