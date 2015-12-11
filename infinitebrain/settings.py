@@ -108,10 +108,10 @@ WSGI_APPLICATION = 'infinitebrain.wsgi.application'
 SOUTH_MIGRATION_MODULES = {
     'taggit': 'taggit.south_migrations',
     'django_nyt': 'django_nyt.south_migrations',
-    'wiki': 'wiki.south_migrations',
-    'images': 'wiki.plugins.images.south_migrations',
-    'notifications': 'wiki.plugins.notifications.south_migrations',
-    'attachments': 'wiki.plugins.attachments.south_migrations',
+#    'wiki': 'wiki.south_migrations',
+#    'images': 'wiki.plugins.images.south_migrations',
+#    'notifications': 'wiki.plugins.notifications.south_migrations',
+#    'attachments': 'wiki.plugins.attachments.south_migrations',
 }
 
 # Database
