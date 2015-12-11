@@ -84,11 +84,11 @@ INSTALLED_APPS = (
     'mptt',
     'sekizai',
     'sorl.thumbnail',
-    'wiki',
-    'wiki.plugins.attachments',
-    'wiki.plugins.notifications',
-    'wiki.plugins.images',
-    'wiki.plugins.macros',
+#    'wiki',
+#    'wiki.plugins.attachments',
+#    'wiki.plugins.notifications',
+#    'wiki.plugins.images',
+#    'wiki.plugins.macros',
 )
 
 MIDDLEWARE_CLASSES = (
