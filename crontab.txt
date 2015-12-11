@@ -1,0 +1,1 @@
+0 * * * * /project/infinitebrain/hourly_updates.sh
